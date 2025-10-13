@@ -58,7 +58,7 @@ const estilos = StyleSheet.create({
     backgroundColor: "#d0f6fe",
     justifyContent: "center", 
     alignItems: "center",
-    paddingBottom: 10,
+    paddingBottom: 10
   },
   quasetudo:{
     height: 900,
