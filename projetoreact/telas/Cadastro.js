@@ -25,6 +25,11 @@ export default class Cadastro extends React.Component {
     return(
       <View style={estilos.tudo}>
           <View style={estilos.quasetudo}>
+          <TouchableOpacity 
+            style={estilos.setaBack} 
+            onPress={() => this.props.navigation.navigate('Login')}>
+            <Text style={{ fontSize: 37 }}>←</Text>
+          </TouchableOpacity>
               <Text style={estilos.titulo}> Cadastrar-se </Text>
               <View style={estilos.juncao}>
                 <Text style={estilos.botaoTexto1}> Usuário</Text>
@@ -86,16 +91,24 @@ const estilos = StyleSheet.create({
     fontFamily: "sans-serif"
 
   },
-  titulo:{
-    fontSize: 25,
-    borderBottomWidth:1,
-    borderColor:"#d0f6fe",
-    paddingLeft: 75 ,
-    marginTop: -1,
-    marginBottom: 50,
-    color: "#151515",
-    fontFamily: "sans-serif",
-  },
+  setaBack:{
+  position: "absolute",
+  left: 18,
+  top: 10, 
+  zIndex: 1,
+  fontSize:30
+},
+titulo:{
+  fontSize: 25,
+  textAlign: "center", 
+  borderBottomWidth: 1,
+  borderColor:"#d0f6fe",
+  paddingBottom:10,
+  marginTop: 10, 
+  marginBottom: 50,
+  color: "#151515",
+  fontFamily: "sans-serif",
+},
   botao:{
     marginTop: -5,
     borderRadius: 5,
