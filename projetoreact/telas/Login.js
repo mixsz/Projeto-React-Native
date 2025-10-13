@@ -1,39 +1,160 @@
 import React from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput,TouchableOpacity,StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class Login extends React.Component {
   constructor(props){
     super(props)
-    this.state = { usuario: undefined, senha: undefined }
+    this.state = { usuario: '', senha: '', mensagem:''}
   }
 
   async ler(){
-    try{
-      let senha = await AsyncStorage.getItem(this.state.usuario);
-      if(senha != null){
-        if(senha == this.state.senha){
-          this.props.navigation.navigate('Tela3', { usuario: this.state.usuario })
-        } else {
-          alert("Senha Incorreta!");
+    if(this.state.usuario != '' && this.state.senha != ''){
+        try{
+          const dados = await AsyncStorage.getItem(this.state.usuario);
+          if(dados !== null){
+            const perfil = JSON.parse(dados)
+            if(perfil.senha === this.state.senha){
+              this.props.navigation.navigate('Home', {perfil})
+            } 
+            else{
+                this.setState({mensagem: "Senha incorreta!"})
+            }
+          } 
+          else {
+            this.setState({mensagem: "Usuário não encontrado!"})
+          }
         }
-      } else {
-        alert("Usuário não foi encontrado!");
-      }
-    }catch(erro){
-      console.log(erro);
-    }
-  }
+        catch(erro){
+          console.log(erro);
+        }
+     }     
+     else{
+       this.setState({mensagem: "Preencha todos os dados!"+this.state.usuario+this.state.senha})
+     } 
+  } 
 
   render(){
     return(
-      <View>
-        <Text>Usuário:</Text>
-        <TextInput onChangeText={(texto)=>this.setState({usuario: texto})} />
-        <Text>Senha:</Text>
-        <TextInput onChangeText={(texto)=>this.setState({senha: texto})} />
-        <Button title="Logar" onPress={()=>this.ler()} />
+      <View style={estilos.tudo}>
+          <View style={estilos.quasetudo}>
+              <Text style={estilos.titulo}> Login </Text>
+              <View style={estilos.juncao}>
+                <Text style={estilos.botaoTexto1}> Usuário</Text>
+                <TextInput style={estilos.input} value={this.state.usuario} onChangeText={(texto)=>this.setState({usuario: texto})} />
+              </View>
+              <View style={estilos.juncao}>
+                <Text style={estilos.botaoTexto1}> Senha</Text>
+                <TextInput style={estilos.input} secureTextEntry={true} value={this.state.senha} onChangeText={(texto)=>this.setState({senha: texto})} />
+              </View>
+              <Text style={estilos.mensagem2}> {this.state.mensagem} </Text>
+              <View style={estilos.botoes}>
+                <TouchableOpacity style={estilos.botao} onPress={() => this.ler()}>
+                  <Text style={estilos.botaoTexto}>Entrar</Text>
+                </TouchableOpacity>
+                 <TouchableOpacity style={estilos.botao2} onPress={() =>this.props.navigation.navigate('Cadastro')}>
+                  <Text style={estilos.botaoTexto2}>Cadastrar-se</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
       </View>
     )
   }
 }
+
+const estilos = StyleSheet.create({
+  tudo:{
+    flex: 1,
+    backgroundColor: "#d0f6fe",
+    justifyContent: "center", 
+    alignItems: "center",
+    paddingBottom: 10
+  },
+  quasetudo:{
+    height: 900,
+    padding: 15,
+    borderRadius: 45,
+    width: "100%",
+    backgroundColor: "white",
+    marginBottom: -400,
+    paddingLeft: 30,
+    
+  },
+  juncao:{
+    flexDirection: "column",
+    marginBottom: 20
+  },
+  input: {
+    height: 45,
+    borderRadius: 8,
+    width: "90%",
+    paddingHorizontal: 10,
+    backgroundColor: "#eaf7fa",
+    borderWidth: 1,
+    borderColor: "#c5d3d6",
+    fontSize: 16,
+    fontFamily: "sans-serif"
+  },
+titulo:{
+  fontSize: 25,
+  textAlign: "center", 
+  borderBottomWidth: 1,
+  borderColor:"#d0f6fe",
+  paddingBottom:10,
+  marginTop: 10, 
+  marginBottom: 50,
+  color: "#151515",
+  fontFamily: "sans-serif",
+},
+  botao:{
+    marginTop: -1,
+    borderRadius: 20,
+    width: "92%",
+    height: 50,
+    alignItems: "center",
+    justifyContent:"center",
+    backgroundColor: "#b3dde6",
+    marginLeft: -1,
+    marginRight: "auto",
+    marginBottom: 10    
+  },
+    botao2:{
+    marginTop: -1,
+    borderRadius: 20,
+    width: "50%",
+    height: 35,
+    alignItems: "center",
+    justifyContent:"center",
+    backgroundColor: "#414040",
+    marginLeft: "auto",
+    marginRight: "auto"
+    
+  },
+
+  botoes:{
+    marginTop: 4,
+    flexDirection: "column",
+  },
+  botaoTexto:{
+    fontWeight: "bold",
+    fontFamily: "sans-serif",
+    fontSize:19,
+    color: "#414040"
+  },
+    botaoTexto2:{
+    fontWeight: "bold",
+    fontFamily: "sans-serif",
+    fontSize:15,
+    color: "#b3dde6"
+  },
+  botaoTexto1:{
+    fontSize: 17,
+    fontFamily: "sans-serif"
+  },
+  mensagem2:{
+    fontSize: 14,
+    fontFamily: "sans-serif",
+    marginTop: -15,
+    color: "red"
+  }
+})

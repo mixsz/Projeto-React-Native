@@ -6,19 +6,58 @@ export default class Cadastro extends React.Component {
   constructor(props){
     super(props)
     this.state={ 
-      user: undefined, 
-      password: undefined ,
-      confirmarSenha: undefined
+      user: '', 
+      password: '' ,
+      confirmarSenha: '',
+      mensagem: '',
+      cor: 'gray'
     }
   }
 
   async gravar(){
-    try{
-      await AsyncStorage.setItem(this.state.user, this.state.password);
-      alert("Salvo com sucesso!")
-    }catch(erro){
-      alert("Erro!")
+       /**
+             * Vou salvar a key como usuario e o valor como uma string JSON (objeto) 
+             * exemplo:
+             * const perfil = {
+             * usuario: this.state.user,
+             * senha: this.state.password
+             *  };
+             * await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
+             * 
+             * AsyncStorage.setItem('a', '{"usuario":"a","senha":"a"}');
+             *                      key              values
+      */
+
+    if(this.state.user != '' && this.state.password != '' && this.state.confirmarSenha != '') {
+      if(this.state.password !== this.state.confirmarSenha){
+        this.setState({mensagem: "As senhas não coincidem!"})
+        this.setState({cor: "red"})
+      }
+      else{
+        try{
+          const existente = await AsyncStorage.getItem(this.state.user)
+           if (existente !== null) {
+              this.setState({ mensagem: "Este nome já está sendo utilizado!", cor: "red"});
+            }
+          else{
+            const perfil = {
+              usuario: this.state.user,
+              senha: this.state.password, // dps eu coloco ponto ou moeda sla oq vou usar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            };
+            await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
+            this.setState({mensagem: "Conta cadastrada com sucesso!", cor: "green" })
+            return;
+          }
+        }
+        catch(erro){
+          alert("Erro!")
+        }
+      }
     }
+   else{
+     this.setState({mensagem: "Preencha todos os dados!"})
+     this.setState({cor: "red"})
+   }
   }
 
   render(){
@@ -33,22 +72,20 @@ export default class Cadastro extends React.Component {
               <Text style={estilos.titulo}> Cadastrar-se </Text>
               <View style={estilos.juncao}>
                 <Text style={estilos.botaoTexto1}> Usuário</Text>
-                <TextInput style={estilos.input} onChangeText={(texto)=>this.setState({user: texto})} />
+                <TextInput style={estilos.input} value={this.state.user} onChangeText={(texto)=>this.setState({user: texto})} />
               </View>
               <View style={estilos.juncao}>
                 <Text style={estilos.botaoTexto1}> Senha</Text>
-                <TextInput style={estilos.input} secureTextEntry={true} onChangeText={(texto)=>this.setState({password: texto})} />
+                <TextInput style={estilos.input} value={this.state.password} secureTextEntry={true} onChangeText={(texto)=>this.setState({password: texto})} />
               </View>
               <View style={estilos.juncao}>
                 <Text style={estilos.botaoTexto1}> Confirmar Senha </Text>
-                <TextInput style={estilos.input} secureTextEntry={true} onChangeText={(texto)=>this.setState({confirmarSenha: texto})} />
+                <TextInput style={estilos.input} secureTextEntry={true} value={this.state.confirmarSenha} onChangeText={(texto)=>this.setState({confirmarSenha: texto})} />
               </View>
+                <Text style={[{color: this.state.cor},estilos.mensagem]}>{this.state.mensagem} </Text>
               <View style={estilos.botoes}>
                 <TouchableOpacity style={estilos.botao} onPress={() => this.gravar()}>
                   <Text style={estilos.botaoTexto}>Cadastrar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={estilos.botao2}>
-                  <Text style={estilos.botaoTexto}>Já possuo conta</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -68,7 +105,7 @@ const estilos = StyleSheet.create({
   quasetudo:{
     height: 900,
     padding: 15,
-    borderRadius: 30,
+    borderRadius: 45,
     width: "100%",
     backgroundColor: "white",
     marginBottom: -400,
@@ -110,22 +147,16 @@ titulo:{
   fontFamily: "sans-serif",
 },
   botao:{
-    marginTop: -5,
-    borderRadius: 5,
-    width: "45%",
-    height: 35,
+    marginTop: 2,
+    borderRadius: 20,
+    width: "92%",
+    height: 50,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "#b3dde6"
-  },
-  botao2:{
-    marginTop: -5,
-    borderRadius: 5,
-    width: "45%",
-    height: 35,
-    alignItems: "center",
-    justifyContent:"center",
-    backgroundColor: "#b3dde6"
+    backgroundColor: "#b3dde6",
+    marginLeft: -1,
+    marginRight: "auto"
+    
   },
   botoes:{
     marginTop: 4,
@@ -134,11 +165,18 @@ titulo:{
   },
   botaoTexto:{
     fontWeight: "bold",
-        fontFamily: "sans-serif"
+    fontFamily: "sans-serif",
+    fontSize:19,
+    color: "#414040"
   },
   botaoTexto1:{
     fontSize: 17,
     fontFamily: "sans-serif"
+  },
+  mensagem:{
+    fontSize: 14,
+    fontFamily: "sans-serif",
+    marginTop: -10
   }
 
 })
