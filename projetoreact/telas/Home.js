@@ -1,12 +1,14 @@
 import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-export default class Home extends React.Component {
+
+
+export default class Home extends React.Component {  
   constructor(props) {
     super(props);
-    // this.state = {
-    //    perfil: this.props.route.params.perfil            
-    // };
+    this.state = {
+       perfil: this.props.route.params.perfil            
+    };
   }
   // nome -> this.state.perfil.usuario !!!!!!!!!!!!!!!!!! VOCÊ TEM QUE ARRUMAR NA TABNAV DEPOIS, N ESQUEÇA!!!!!!!!!!!!!!
   render() {
@@ -14,16 +16,16 @@ export default class Home extends React.Component {
       <View style={estilos.tudo}>
         <View style={estilos.cima}>
             <FontAwesome5 style={estilos.icone1} name="user-circle" size={70} color="#232424"/>
-            <Text style={estilos.titulo}> Usuario </Text> 
+            <Text style={estilos.titulo}> {this.state.perfil.usuario} </Text> 
         </View>
          <View style={estilos.botoes}>
-              <TouchableOpacity style={estilos.botao}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1nav')}>
                 <Text style={estilos.textobotao}> Operação Misteriosa </Text>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao}>
                 <Text style={estilos.textobotao1}> Alguma coisa </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')}>
                 <Text style={estilos.textobotao2}> Sair </Text>
               </TouchableOpacity>
          </View>

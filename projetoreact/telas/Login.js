@@ -31,7 +31,7 @@ export default class Login extends React.Component {
         }
      }     
      else{
-       this.setState({mensagem: "Preencha todos os dados!"+this.state.usuario+this.state.senha})
+       this.setState({mensagem: "Preencha todos os dados!"})
      } 
   } 
 

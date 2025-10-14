@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import Home from '../telas/Home';
-import Tela4 from '../telas/Tela4';
+import Homenav from '../navs/homenav';
+import Ranking from '../telas/Ranking';
 
 
 const Tab = createBottomTabNavigator();
@@ -27,12 +27,12 @@ export default class TabNav extends React.Component {
           tabBarInactiveTintColor: "#232424",
         }}
       >
-        <Tab.Screen name="Home" component={Home} //initialParams={{ perfil: this.props.route.params.perfil }} 
+        <Tab.Screen name="Homenav" component={Homenav} initialParams={{ perfil: this.props.route.params.perfil }} 
           options={{ headerShown: false,
             tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="home" color={color} size={size}/>)
           }}
         />
-        <Tab.Screen name="Tela4" component={Tela4} //initialParams={{ perfil: this.props.route.params.perfil}}
+        <Tab.Screen name="Ranking" component={Ranking} initialParams={{ perfil: this.props.route.params.perfil}}
           options={{headerShown: false,
             tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="account-details" color={color} size={size}/>)
           }}

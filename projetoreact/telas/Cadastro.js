@@ -12,54 +12,56 @@ export default class Cadastro extends React.Component {
       password: '' ,
       confirmarSenha: '',
       mensagem: '',
-      cor: 'gray'
+      cor: 'gray',
+      criado: false,
     }
   }
 
   async gravar(){
-       /**
-             * Vou salvar a key como usuario e o valor como uma string JSON (objeto) 
-             * exemplo:
-             * const perfil = {
-             * usuario: this.state.user,
-             * senha: this.state.password
-             *  };
-             * await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
-             * 
-             * AsyncStorage.setItem('a', '{"usuario":"a","senha":"a"}');
-             *                      key              values
-      */
+    /**
+           * Vou salvar a key como usuario e o valor como uma string JSON (objeto) 
+           * exemplo:
+           * const perfil = {
+           * usuario: this.state.user,
+           * senha: this.state.password
+           *  };
+           * await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
+           * 
+           * AsyncStorage.setItem('a', '{"usuario":"a","senha":"a"}');
+           *                      key              values
+    */
 
-    if(this.state.user != '' && this.state.password != '' && this.state.confirmarSenha != '') {
-      if(this.state.password !== this.state.confirmarSenha){
-        this.setState({mensagem: "As senhas não coincidem!"})
-        this.setState({cor: "red"})
-      }
-      else{
-        try{
-          const existente = await AsyncStorage.getItem(this.state.user)
-           if (existente !== null) {
-              this.setState({ mensagem: "Este nome já está sendo utilizado!", cor: "red"});
+      if(this.state.user != '' && this.state.password != '' && this.state.confirmarSenha != '') {
+        if(this.state.password !== this.state.confirmarSenha){
+          this.setState({mensagem: "As senhas não coincidem!"})
+          this.setState({cor: "red"})
+        }
+        else{
+          try{
+            const existente = await AsyncStorage.getItem(this.state.user)
+            if (existente !== null) {
+                this.setState({ mensagem: "Este nome já está sendo utilizado!", cor: "red"});
+              }
+            else{
+              const perfil = {
+                usuario: this.state.user,
+                senha: this.state.password, // dps eu coloco ponto ou moeda sla oq vou usar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              };
+              await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
+              this.setState({mensagem: "", cor: "green",criado: true})
+              alert("Conta cadastrada com sucesso!")
+              return;
             }
-          else{
-            const perfil = {
-              usuario: this.state.user,
-              senha: this.state.password, // dps eu coloco ponto ou moeda sla oq vou usar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            };
-            await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
-            this.setState({mensagem: "Conta cadastrada com sucesso!", cor: "green" })
-            return;
+          }
+          catch(erro){
+            alert("Erro!")
           }
         }
-        catch(erro){
-          alert("Erro!")
-        }
       }
+    else{
+      this.setState({mensagem: "Preencha todos os dados!"})
+      this.setState({cor: "red"})
     }
-   else{
-     this.setState({mensagem: "Preencha todos os dados!"})
-     this.setState({cor: "red"})
-   }
   }
 
   render(){
