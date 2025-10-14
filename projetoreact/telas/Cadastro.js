@@ -110,7 +110,10 @@ const estilos = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: -400,
     paddingLeft: 30,
-    
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5
   },
   juncao:{
     flexDirection: "column",
@@ -125,7 +128,11 @@ const estilos = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#c5d3d6",
     fontSize: 16,
-    fontFamily: "sans-serif"
+    fontFamily: "sans-serif",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5
 
   },
   setaBack:{
@@ -155,7 +162,11 @@ titulo:{
     justifyContent:"center",
     backgroundColor: "#b3dde6",
     marginLeft: -1,
-    marginRight: "auto"
+    marginRight: "auto",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5
     
   },
   botoes:{
