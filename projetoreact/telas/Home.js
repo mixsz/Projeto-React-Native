@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
-
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +13,7 @@ export default class Home extends React.Component {
     return (
       <View style={estilos.tudo}>
         <View style={estilos.cima}>
-            <MaterialCommunityIcons style={estilos.icone1} name="face-man-profile" size={70} color="#232424"/>
+            <FontAwesome5 style={estilos.icone1} name="user-circle" size={70} color="#232424"/>
             <Text style={estilos.titulo}> Usuario </Text> 
         </View>
          <View style={estilos.botoes}>
@@ -80,7 +79,7 @@ const estilos = StyleSheet.create({
     fontWeight: "bold"
   },
   titulo:{
-    fontSize: 40,
+    fontSize: 25,
     fontFamily: "sans-serif",
     textAlign: "center",
     color: "#232424",
@@ -89,7 +88,8 @@ const estilos = StyleSheet.create({
   icone1:{
     fontFamily: "sans-serif",
     textAlign: "center",
-    fontWeight: "bolder"
+    fontWeight: "bolder",
+    marginBottom: 10
   },
   cima:{
     backgroundColor: "white",

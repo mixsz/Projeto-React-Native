@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput,TouchableOpacity,StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 export default class Login extends React.Component {
   constructor(props){
@@ -40,11 +41,17 @@ export default class Login extends React.Component {
           <View style={estilos.quasetudo}>
               <Text style={estilos.titulo}> Login </Text>
               <View style={estilos.juncao}>
-                <Text style={estilos.botaoTexto1}> Usuário</Text>
+                <View style={estilos.nomeicon}>
+                  <FontAwesome5 name="user-alt" size={16} color="#414040" />
+                  <Text style={estilos.botaoTexto1}> Usuário</Text>
+                </View>
                 <TextInput style={estilos.input} value={this.state.usuario} onChangeText={(texto)=>this.setState({usuario: texto})} />
               </View>
               <View style={estilos.juncao}>
+              <View style={estilos.nomeicon}>
+                <FontAwesome5 name="lock" size={16} color="#414040" />
                 <Text style={estilos.botaoTexto1}> Senha</Text>
+              </View>
                 <TextInput style={estilos.input} secureTextEntry={true} value={this.state.senha} onChangeText={(texto)=>this.setState({senha: texto})} />
               </View>
               <Text style={estilos.mensagem2}> {this.state.mensagem} </Text>
@@ -166,6 +173,10 @@ titulo:{
   botaoTexto1:{
     fontSize: 17,
     fontFamily: "sans-serif"
+  },
+  nomeicon:{
+    flexDirection: "row",
+    marginLeft: 6
   },
   mensagem2:{
     fontSize: 14,

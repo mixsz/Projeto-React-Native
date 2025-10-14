@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default class Cadastro extends React.Component {
   constructor(props){
@@ -71,15 +73,24 @@ export default class Cadastro extends React.Component {
           </TouchableOpacity>
               <Text style={estilos.titulo}> Cadastrar-se </Text>
               <View style={estilos.juncao}>
-                <Text style={estilos.botaoTexto1}> Usuário</Text>
+                <View style={estilos.nomeicon}>
+                  <FontAwesome5 name="user-alt" size={16} color="#414040" />
+                  <Text style={estilos.botaoTexto1}> Usuário</Text>
+                </View>
                 <TextInput style={estilos.input} value={this.state.user} onChangeText={(texto)=>this.setState({user: texto})} />
               </View>
               <View style={estilos.juncao}>
+                <View style={estilos.nomeicon}>
+                  <FontAwesome5 name="lock" size={16} color="#414040" />
                 <Text style={estilos.botaoTexto1}> Senha</Text>
+              </View>
                 <TextInput style={estilos.input} value={this.state.password} secureTextEntry={true} onChangeText={(texto)=>this.setState({password: texto})} />
               </View>
               <View style={estilos.juncao}>
-                <Text style={estilos.botaoTexto1}> Confirmar Senha </Text>
+                <View style={estilos.nomeicon}>
+                  <MaterialIcons name="lock-person" size={18} color="#414040" />
+                  <Text style={estilos.botaoTexto1}> Confirmar senha</Text>
+              </View>
                 <TextInput style={estilos.input} secureTextEntry={true} value={this.state.confirmarSenha} onChangeText={(texto)=>this.setState({confirmarSenha: texto})} />
               </View>
                 <Text style={[{color: this.state.cor},estilos.mensagem]}>{this.state.mensagem} </Text>
@@ -188,6 +199,10 @@ titulo:{
     fontSize: 14,
     fontFamily: "sans-serif",
     marginTop: -10
-  }
+  },
+   nomeicon:{
+    flexDirection: "row",
+    marginLeft: 6
+  },
 
 })
