@@ -15,7 +15,7 @@ export default class TabNav extends React.Component {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: "#d0f6fe", 
-            height: 60, 
+            height: 80, 
             borderTopColor: "#a3a3a3",
             borderTopWidth: 1,
             shadowColor: '#000',
@@ -28,7 +28,7 @@ export default class TabNav extends React.Component {
         }}
       >
         <Tab.Screen name="Homenav" component={Homenav} initialParams={{ perfil: this.props.route.params.perfil }} 
-          options={{ headerShown: false,
+          options={{ headerShown: false, tabBarLabel: 'Home',
             tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="home" color={color} size={size}/>)
           }}
         />

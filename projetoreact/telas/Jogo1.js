@@ -1,13 +1,112 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Entypo from '@expo/vector-icons/Entypo';
 
 export default class Jogo1 extends React.Component {
   render() {
     return (
-      <View style={{ flex: 1, padding: 20 }}>
-          <Text >Jogo 1</Text>
-          <Button title="Click" onPress={() => this.props.navigation.navigate('Tela5')}  />
+      <View style={estilos.tudo}>
+           <Image source={require('../assets/operacaomist.png')} style={estilos.logo}/>
+           <Text style={estilos.linha}> </Text>
+           <View style={estilos.botoes}>
+               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Tela6')}>
+                <View style={estilos.nomeicons}>
+                  <Ionicons name="game-controller" size={24} color="#d0f6fe" style={estilos.icon}/>
+                  <Text style={estilos.textobotao2}> Jogar </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1tutorial')}>
+                  <View style={estilos.nomeicons}>
+                    <Entypo name="help-with-circle" size={24} color="#d0f6fe" style={estilos.icon2} />
+                    <Text style={estilos.textobotao1}> Tutorial </Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Home')}>
+                  <View style={estilos.nomeicons}>
+                    <Ionicons name="arrow-back-outline" size={30}color="#d0f6fe" style={estilos.icon2} />
+                    <Text style={estilos.textobotao3}> Voltar </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
       </View>
     );
   }
 }
+const estilos = StyleSheet.create({
+  tudo:{
+    flex: 1,
+    backgroundColor: "#d0f6fe"
+  },
+  botao:{
+    borderRadius: 13,
+    width: "90%",
+    height: 80,
+    alignItems: "center",
+    justifyContent:"center",
+    backgroundColor: "#232424",
+    marginLeft: -1,
+    marginBottom: 60,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5, // isso so funciona pra android
+  },
+  textobotao2:{
+    fontSize: 20,
+    fontFamily: "sans-serif",
+    color: '#d0f6fe',
+    fontWeight: "bold",
+    right: 8
+  },
+    textobotao3:{
+    fontSize: 20,
+    fontFamily: "sans-serif",
+    color: '#d0f6fe',
+    fontWeight: "bold",
+    right: 3
+  },
+  logo:{
+    height: 250,
+    width: 250,
+    marginLeft: "auto",
+    marginRight: "auto",
+    shadowOffset: { width: 0, height: 0},
+    shadowOpacity: 0.9,
+    shadowRadius: 5, 
+    elevation: 5, // isso so funciona pra android
+    marginTop: 10
+  },
+   botoes:{
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    marginTop: 10
+  },
+  nomeicons:{
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  icon:{
+    right: 13
+  },
+  icon2:{
+    marginRight: 3,
+  },
+    textobotao1:{
+    fontSize: 20,
+    fontFamily: "sans-serif",
+    color: '#d0f6fe',
+    fontWeight: "bold",
+    left: 1
+  },
+  linha:{
+    borderTopWidth: 1,
+    borderColor:"#0e1f8b",  
+    width: "90%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  }
+})

@@ -120,17 +120,19 @@ titulo:{
   marginBottom: 50,
   color: "#151515",
   fontFamily: "sans-serif",
+  right: 12
 },
   botao:{
     marginTop: -1,
     borderRadius: 20,
-    width: "92%",
+    width: "80%",
     height: 50,
     alignItems: "center",
     justifyContent:"center",
     backgroundColor: "#b3dde6",
-    marginLeft: -1,
+    marginLeft: "auto",
     marginRight: "auto",
+    right: 14,
     marginBottom: 10, 
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -150,7 +152,8 @@ titulo:{
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5, 
-    elevation: 5
+    elevation: 5,
+    right:6
     
   },
 

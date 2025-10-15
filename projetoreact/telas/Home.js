@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default class Home extends React.Component {  
   constructor(props) {
@@ -20,13 +20,22 @@ export default class Home extends React.Component {
         </View>
          <View style={estilos.botoes}>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1nav')}>
-                <Text style={estilos.textobotao}> Operação Misteriosa </Text>
+              <View style ={estilos.nomeicon}>
+                  <MaterialCommunityIcons name="calculator-variant-outline" size={30} color="#d0f6fe" style={estilos.iconz} />
+                  <Text style={estilos.textobotao}> Operação Misteriosa </Text>
+              </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao}>
+              <View style ={estilos.nomeicon}>
+                <MaterialCommunityIcons name="material-design" size={30} color="#d0f6fe" style={estilos.iconz} />
                 <Text style={estilos.textobotao1}> Alguma coisa </Text>
+              </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')}>
+              <View style ={estilos.nomeicon}>
+                <MaterialCommunityIcons name="exit-run" size={24}  color="#d93838" style={estilos.iconz2} />
                 <Text style={estilos.textobotao2}> Sair </Text>
+              </View>
               </TouchableOpacity>
          </View>
       </View>
@@ -104,5 +113,15 @@ const estilos = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5, 
     elevation: 5
+  },
+  nomeicon:{
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  iconz:{
+    marginRight: 4
+  },
+  iconz2:{
+    marginRight: 2
   }
 })
