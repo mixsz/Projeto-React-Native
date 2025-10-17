@@ -17,8 +17,8 @@ export default class Jogo1tutorial extends React.Component {
               <Text style={estilos.palavra}>Neste jogo, seu objetivo é descobrir qual operador utilizar:</Text>
               <Text style={estilos.palavra}>• Soma (+)</Text>
               <Text style={estilos.palavra}>• Subtração (-)</Text>
-              <Text style={estilos.palavra}>• Multiplicação (*)</Text>
-              <Text style={estilos.palavra}>• Divisão (/)</Text>
+              <Text style={estilos.palavra}>• Multiplicação (×)</Text>
+              <Text style={estilos.palavra}>• Divisão (÷)</Text>
               <Text> </Text>
               <Text style={estilos.palavra}>Dentro de 10 rodadas, os números serão exibidos na tela, e você deverá completar o sinal correto para realizar a operação, adivinhe o máximo de sinais que conseguir!</Text>
               <Text> </Text>

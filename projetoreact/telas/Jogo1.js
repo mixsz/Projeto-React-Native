@@ -10,7 +10,7 @@ export default class Jogo1 extends React.Component {
            <Image source={require('../assets/operacaomist.png')} style={estilos.logo}/>
            <Text style={estilos.linha}> </Text>
            <View style={estilos.botoes}>
-               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Tela6')}>
+               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1play')}>
                 <View style={estilos.nomeicons}>
                   <Ionicons name="game-controller" size={24} color="#d0f6fe" style={estilos.icon}/>
                   <Text style={estilos.textobotao2}> Jogar </Text>

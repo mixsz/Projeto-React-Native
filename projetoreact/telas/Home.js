@@ -25,7 +25,7 @@ export default class Home extends React.Component {
                   <Text style={estilos.textobotao}> Operação Misteriosa </Text>
               </View>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2nav')}>
               <View style ={estilos.nomeicon}>
                 <MaterialCommunityIcons name="material-design" size={30} color="#d0f6fe" style={estilos.iconz} />
                 <Text style={estilos.textobotao1}> Alguma coisa </Text>
