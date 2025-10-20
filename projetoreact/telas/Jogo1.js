@@ -7,24 +7,24 @@ export default class Jogo1 extends React.Component {
   render() {
     return (
       <View style={estilos.tudo}>
-           <Image source={require('../assets/operacaomist.png')} style={estilos.logo}/>
+           <Image source={require('../assets/logojogo1.png')} style={estilos.logo}/>
            <Text style={estilos.linha}> </Text>
            <View style={estilos.botoes}>
                <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1play')}>
                 <View style={estilos.nomeicons}>
-                  <Ionicons name="game-controller" size={24} color="#d0f6fe" style={estilos.icon}/>
+                  <Ionicons name="game-controller" size={24} color="white" style={estilos.icon}/>
                   <Text style={estilos.textobotao2}> Jogar </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1tutorial')}>
                   <View style={estilos.nomeicons}>
-                    <Entypo name="help-with-circle" size={24} color="#d0f6fe" style={estilos.icon2} />
+                    <Entypo name="help-with-circle" size={24} color="white" style={estilos.icon2} />
                     <Text style={estilos.textobotao1}> Tutorial </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Home')}>
                   <View style={estilos.nomeicons}>
-                    <Ionicons name="arrow-back-outline" size={30}color="#d0f6fe" style={estilos.icon2} />
+                    <Ionicons name="arrow-back-outline" size={30}color="white" style={estilos.icon2} />
                     <Text style={estilos.textobotao3}> Voltar </Text>
                 </View>
               </TouchableOpacity>
@@ -44,7 +44,7 @@ const estilos = StyleSheet.create({
     height: 80,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "#232424",
+    backgroundColor: "#61d1ea",
     marginLeft: -1,
     marginBottom: 60,
     shadowColor: "#000",
@@ -56,20 +56,20 @@ const estilos = StyleSheet.create({
   textobotao2:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: '#d0f6fe',
+    color: 'white',
     fontWeight: "bold",
     right: 8
   },
     textobotao3:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: '#d0f6fe',
+    color: 'white',
     fontWeight: "bold",
     right: 3
   },
   logo:{
     height: 250,
-    width: 250,
+    width: 300,
     marginLeft: "auto",
     marginRight: "auto",
     shadowOffset: { width: 0, height: 0},
@@ -98,7 +98,7 @@ const estilos = StyleSheet.create({
     textobotao1:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: '#d0f6fe',
+    color: 'white',
     fontWeight: "bold",
     left: 1
   },

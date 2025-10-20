@@ -6,11 +6,7 @@ export default class Jogo1tutorial extends React.Component {
     return (
       <View style={estilos.tudo}>
          <View style={estilos.box}>
-            <TouchableOpacity 
-              style={estilos.setaback} 
-              onPress={() => this.props.navigation.navigate('Jogo1')}>
-            </TouchableOpacity>
-            <Image source={require('../assets/operacaomist.png')} style={estilos.logo}/>
+            <Image source={require('../assets/logojogo1.png')} style={estilos.logo}/>
             <Text style= {estilos.linha}> </Text>
             <View style={estilos.texto}>
               <Text style={estilos.titulo}>Como jogar?</Text>
@@ -30,6 +26,11 @@ export default class Jogo1tutorial extends React.Component {
                   <Text style={estilos.textobotao2}>Entendido</Text>
             </TouchableOpacity>
          </View>
+        <TouchableOpacity 
+            style={estilos.setaBack} 
+            onPress={() => this.props.navigation.navigate('Jogo1')}>
+            <Text style={{ fontSize: 46, color: "#014a7d" }}>←</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -37,36 +38,31 @@ export default class Jogo1tutorial extends React.Component {
 const estilos = StyleSheet.create({
   tudo:{
     flex: 1,
-    backgroundColor: "#d0f6fe"
+    backgroundColor: "#d0f6fe",
   },
   box:{
-    backgroundColor: "#232424",
-    height: 640,
-    width: 320,
+    backgroundColor: "#d0f6fe",
+    height: 680,
+    width: 330,
     margin: "auto",
-    borderRadius: 14,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 5, 
-    elevation: 5, // isso so funciona pra android
-    borderWidth: 1,
-    borderColor:"#cffdfa",
+    borderRadius: 10,
     bottom: -10,
-    paddingTop: 8
+    paddingTop: 4
   },
     logo:{
     height: 140,
-    width: 140,
+    width: 200,
     marginLeft: "auto",
     marginRight: "auto",
     shadowOffset: { width: 0, height: 0},
     shadowOpacity: 0.9,
     shadowRadius: 5, 
-    elevation: 5, // isso so funciona pra android   
+    elevation: 5, // isso so funciona pra android
+    marginTop:10
   },
   linha:{
     borderTopWidth: 1,
-    borderColor:"#d0f6fe",  
+    borderColor:"#0e1f8b",  
     width: "90%",
     marginLeft: "auto",
     marginRight: "auto"
@@ -74,14 +70,15 @@ const estilos = StyleSheet.create({
   palavra:{
     fontFamily: "sans-serif",
     fontSize:16,
-    color: "#d0f6fe",
-    fontWeight: "bold"
+    color: "#014a7d",
+    fontWeight: "bold",
+    padding:3
   },
     titulo:{
     fontWeight: "bold",
     fontFamily: "sans-serif",
     fontSize:22,
-    color: "#d0f6fe",
+    color: "#014a7d",
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: -12,
@@ -97,24 +94,25 @@ const estilos = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "#b3dde6",
+    backgroundColor: "#61d1ea",
     marginLeft: "auto",
     marginRight: "auto",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5, 
     elevation: 5,
-    marginTop: 22
+    marginTop: 10
   },
    textobotao2:{
      fontWeight: "bold",
     fontFamily: "sans-serif",
     fontSize:18,
     color: "white",
-  },
-  setaback:{
+  },  
+  setaBack:{
     position: "absolute",
-    left: 4,
-    top: -21
-  }
+    left: 18,
+    top: 24, 
+    zIndex: 1,
+  },
 })
