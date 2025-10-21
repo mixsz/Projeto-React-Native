@@ -19,19 +19,19 @@ export default class Home extends React.Component {
             <Text style={estilos.titulo}> {this.state.perfil.usuario} </Text> 
         </View>
          <View style={estilos.botoes}>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1nav')}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1nav')} activeOpacity={0.6}>
               <View style ={estilos.nomeicon}>
                   <MaterialCommunityIcons name="calculator-variant-outline" size={30} color="#d0f6fe" style={estilos.iconz} />
                   <Text style={estilos.textobotao}> Operação Misteriosa </Text>
               </View>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2nav')}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2nav')} activeOpacity={0.6}>
               <View style ={estilos.nomeicon}>
                 <MaterialCommunityIcons name="material-design" size={30} color="#d0f6fe" style={estilos.iconz} />
                 <Text style={estilos.textobotao1}> Alguma coisa </Text>
               </View>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')} activeOpacity={0.6}>
               <View style ={estilos.nomeicon}>
                 <MaterialCommunityIcons name="exit-run" size={24}  color="#d93838" style={estilos.iconz2} />
                 <Text style={estilos.textobotao2}> Sair </Text>

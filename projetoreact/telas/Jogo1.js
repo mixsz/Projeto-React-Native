@@ -10,19 +10,19 @@ export default class Jogo1 extends React.Component {
            <Image source={require('../assets/logojogo1.png')} style={estilos.logo}/>
            <Text style={estilos.linha}> </Text>
            <View style={estilos.botoes}>
-               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1play')}>
+               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1play')} activeOpacity={0.6}>
                 <View style={estilos.nomeicons}>
                   <Ionicons name="game-controller" size={24} color="white" style={estilos.icon}/>
                   <Text style={estilos.textobotao2}> Jogar </Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1tutorial')}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1tutorial')} activeOpacity={0.6}>
                   <View style={estilos.nomeicons}>
                     <Entypo name="help-with-circle" size={24} color="white" style={estilos.icon2} />
                     <Text style={estilos.textobotao1}> Tutorial </Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Home')}>
+              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Home')} activeOpacity={0.7}>
                   <View style={estilos.nomeicons}>
                     <Ionicons name="arrow-back-outline" size={30}color="white" style={estilos.icon2} />
                     <Text style={estilos.textobotao3}> Voltar </Text>

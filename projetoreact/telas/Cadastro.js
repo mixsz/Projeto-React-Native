@@ -70,7 +70,7 @@ export default class Cadastro extends React.Component {
           <View style={estilos.quasetudo}>
           <TouchableOpacity 
             style={estilos.setaBack} 
-            onPress={() => this.props.navigation.navigate('Login')}>
+            onPress={() => this.props.navigation.navigate('Login')} activeOpacity={0.7}>
             <Text style={{ fontSize: 37 }}>←</Text>
           </TouchableOpacity>
               <Text style={estilos.titulo}> Cadastrar-se </Text>
@@ -97,7 +97,7 @@ export default class Cadastro extends React.Component {
               </View>
                 <Text style={[{color: this.state.cor},estilos.mensagem]}>{this.state.mensagem} </Text>
               <View style={estilos.botoes}>
-                <TouchableOpacity style={estilos.botao} onPress={() => this.gravar()}>
+                <TouchableOpacity style={estilos.botao} onPress={() => this.gravar()} activeOpacity={0.6}>
                   <Text style={estilos.botaoTexto}>Cadastrar</Text>
                 </TouchableOpacity>
               </View>

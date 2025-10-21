@@ -56,10 +56,10 @@ export default class Login extends React.Component {
               </View>
               <Text style={estilos.mensagem2}> {this.state.mensagem} </Text>
               <View style={estilos.botoes}>
-                <TouchableOpacity style={estilos.botao} onPress={() => this.ler()}>
+                <TouchableOpacity style={estilos.botao} onPress={() => this.ler()} activeOpacity={0.6}>
                   <Text style={estilos.botaoTexto}>Entrar</Text>
                 </TouchableOpacity>
-                 <TouchableOpacity style={estilos.botao2} onPress={() =>this.props.navigation.navigate('Cadastro')}>
+                 <TouchableOpacity style={estilos.botao2} onPress={() =>this.props.navigation.navigate('Cadastro')} activeOpacity={0.6}>
                   <Text style={estilos.botaoTexto2}>Cadastrar-se</Text>
                 </TouchableOpacity>
               </View>

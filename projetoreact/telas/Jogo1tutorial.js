@@ -22,7 +22,7 @@ export default class Jogo1tutorial extends React.Component {
               <Text> </Text>
               <Text style={estilos.palavra}>Obs: O jogo fica mais difícil conforme as rodadas avançam.</Text>
             </View>
-             <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1')}>
+             <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1')} activeOpacity={0.6}>
                   <Text style={estilos.textobotao2}>Entendido</Text>
             </TouchableOpacity>
          </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image } from 'react-native';
-import { Card, Paragraph, Title } from 'react-native-paper';
-
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 export default class Jogo1play extends React.Component {
     constructor(props){
       super(props)
@@ -12,11 +12,11 @@ export default class Jogo1play extends React.Component {
         erros: 0,
         chute: '',
         resposta: '',
+        acabou: false
       }
   }
-
   componentDidMount(){
-    this.validar()
+    this.validar();
   }
 
   aleatorio(min, max) {
@@ -133,7 +133,6 @@ export default class Jogo1play extends React.Component {
   criar_expressao(){
     let op = this.op_aleatoria()
     let resultado, expressaotemp
-    let rodadatemp = this.state.rodada
     const icon = "■"
     let n1 = this.aleatorio(1,100)
     let n2 = this.aleatorio(1,100)
@@ -142,13 +141,12 @@ export default class Jogo1play extends React.Component {
     let op2 = this.op_aleatoria()
     let op3 = this.op_aleatoria()
     let rodada5e6 = this.aleatorio(1,2)
-    let final = this.aleatorio(1,2,3)
+    let final = this.aleatorio(1,3)
     if(op == " + "){
       this.setState({resposta: op})
       if(this.state.rodada < 2){
         resultado = eval(`${n1}${op}${n2}`); 
         expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-        this.setState({expressao: expressaotemp})
       }/////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 4){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -157,7 +155,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 5){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -174,7 +171,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 6){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -184,7 +180,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.expandir(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 8){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -193,7 +188,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 9){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -216,7 +210,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
       else if(this.state.rodada < 10){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -242,7 +235,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
     }
 
@@ -252,7 +244,6 @@ export default class Jogo1play extends React.Component {
       if(this.state.rodada < 2){
         resultado = eval(`${n1}${op}${n2}`);
         expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 4){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -261,7 +252,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 5){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -278,7 +268,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 6){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -297,7 +286,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 8){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -306,7 +294,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 9){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -329,7 +316,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
       else if(this.state.rodada < 10){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -355,7 +341,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
     }
 
@@ -365,7 +350,6 @@ export default class Jogo1play extends React.Component {
       if(this.state.rodada < 2){
         resultado = eval(`${n1}${op}${n2}`);
         expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 4){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -374,7 +358,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 5){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -391,7 +374,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 6){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -410,7 +392,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 8){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -419,7 +400,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 9){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -442,7 +422,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
       else if(this.state.rodada < 10){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -468,7 +447,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
     }
 
@@ -479,7 +457,6 @@ export default class Jogo1play extends React.Component {
         resultado = eval(`${n1}${op}${n2}`);
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 4){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -488,7 +465,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
        else if(this.state.rodada < 5){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -505,7 +481,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 6){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -524,7 +499,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
       else if(this.state.rodada < 8){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -533,7 +507,6 @@ export default class Jogo1play extends React.Component {
         resultado = this.verifica_inteiro(resultado)
         expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }//////////////////////////////////////////////////////////////////////////////////////////////
        else if(this.state.rodada < 9){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -556,7 +529,6 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
       else if(this.state.rodada < 10){
         [op,op2,op3] = this.troca_ordem(op,op2,op3)
@@ -582,35 +554,117 @@ export default class Jogo1play extends React.Component {
           expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
         }
         expressaotemp = this.formatar(expressaotemp)
-        this.setState({expressao: expressaotemp})
       }
     }
+    this.setState({expressao: expressaotemp})
   }
 
-  validar = () => { // POR ALGUM MOTIVO A FUNCAO criar_expressao() DA ERRO NO CELULAR AS VEZES, ENTAO PRECISEI CRIAR UMA OUTRA FUNCAO COM EXCEPTION 
+ //////////////////////////////////////////////
+
+  validar(){ // POR ALGUM MOTIVO A FUNCAO criar_expressao() DA ERRO NO CELULAR AS VEZES, ENTAO PRECISEI CRIAR UMA OUTRA FUNCAO COM EXCEPTION 
     let ok = false;
-    if(this.state.rodada < 10){
-      while (!ok) {
+
+    if(this.state.rodada == 0){
+      while (!ok){
         try{
           this.criar_expressao();
           ok = true; 
           this.setState(prevState => ({ rodada: prevState.rodada + 1 }));
         } 
         catch(erro){
+          console.log("Erro na primeira rodada: ", erro);
+        }
+      }
+    }
+
+    else if(this.state.rodada < 10){
+      this.pontuar()
+      while (!ok){
+        try{
+          this.criar_expressao();
+          ok = true; 
+          this.setState(prevState => ({ rodada: prevState.rodada + 1, chute: ''}));
+        } 
+        catch(erro){
           console.log("Erro expressao:", erro);
         }
       }
     }
+
+    else if(this.state.rodada == 10 && !this.state.acabou){
+      this.pontuar()
+      this.setState({acabou: true,chute: ''})
+    }
   }
+  /////////////////////////////////////////////////
+ escolhersinal = (sinal) => {
+    if (this.state.chute === sinal) {
+      this.setState({ chute: '' });
+    } else {
+      this.setState({ chute: sinal });
+    }
+  }
+
+  ////////////////////////////////////////////////
+  pontuar(){
+    if(this.state.chute == this.state.resposta){
+      this.setState(prevState => ({ acertos: prevState.acertos + 1 }));
+    }
+    else{
+      this.setState(prevState => ({ erros: prevState.erros + 1 }));
+    }
+  }
+
     render() {
     return (
       <View style={estilos.tudo}>
         <Text style={estilos.rodada}>Rodada {this.state.rodada}</Text>   
+         <View style={estilos.stats}>
+            <View style={estilos.acertos}>
+              <MaterialIcons name="check-box" size={17} color="#60d06e"/> 
+              <Text style={estilos.pontos}> {this.state.acertos} </Text>
+            </View>
+            <View style={estilos.erros}>
+              <MaterialCommunityIcons name="close-box" size={18} color="#fd5353"  style={estilos.iconruim}/>
+              <Text style={estilos.pontos}> {this.state.erros} </Text>
+            </View>
+        </View>
         <View style={estilos.box}>
           <Text style={estilos.expressao}>{this.state.expressao}</Text> 
         </View>
-         <TouchableOpacity style={estilos.botao} onPress={() => this.validar()}>
-            <Text>Proximo</Text>
+        <View style={estilos.botoes}>
+          <View style={estilos.sinais}>
+            <TouchableOpacity 
+            style={[estilos.botaosinal,this.state.chute === " + " && estilos.botaoselecionado]} 
+            onPress={() => this.escolhersinal(" + ")} activeOpacity={0.6}>
+              <Text style={[estilos.textobotao,this.state.chute === " + " && estilos.textoselecionado]}>+</Text>
+            </TouchableOpacity>
+             <TouchableOpacity 
+            style={[estilos.botaosinal,this.state.chute === " - " && estilos.botaoselecionado]} 
+            onPress={() => this.escolhersinal(" - ")} activeOpacity={0.6}>
+              <Text style={[estilos.textobotao,this.state.chute === " - " && estilos.textoselecionado]}>-</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={estilos.sinais2}>
+             <TouchableOpacity 
+            style={[estilos.botaosinal,this.state.chute === " * " && estilos.botaoselecionado]} 
+            onPress={() => this.escolhersinal(" * ")} activeOpacity={0.6}>
+              <Text style={[estilos.textobotao,this.state.chute === " * " && estilos.textoselecionado]}>×</Text>
+            </TouchableOpacity>
+             <TouchableOpacity 
+            style={[estilos.botaosinal,this.state.chute === " / " && estilos.botaoselecionado]} 
+            onPress={() => this.escolhersinal(" / ")} activeOpacity={0.6}>
+              <Text style={[estilos.textobotao,this.state.chute === " / " && estilos.textoselecionado]}>÷</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={estilos.botao} onPress={() => this.validar()} activeOpacity={0.6}>
+              <Text style={estilos.textobotao2}>Confirmar</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity 
+            style={estilos.setaBack} 
+            onPress={() => this.props.navigation.navigate('Jogo1')} activeOpacity={0.6}>
+            <Text style={{ fontSize: 46, color: "#014a7d" }}>←</Text>
         </TouchableOpacity>
       </View>
     );
@@ -629,31 +683,39 @@ const estilos = StyleSheet.create({
     fontFamily: "sans-serif",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: 15
+    marginTop: 50
   },
   botao:{
-    borderRadius: 3,
-    width: "20%",
-    height: 30,
+    borderRadius:30,
+    width: "70%",
+    height: 50,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "#b3dde6",
+    backgroundColor: "white",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5, 
     elevation: 5,
     marginBottom: 60,
-    marginTop: 20,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: -30,
+    paddingBottom: 2
+  },
+  textobotao2:{
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#61d1ea",
   },
   box:{
     backgroundColor: "white",
     height: 200,
     width: "90%",
     alignSelf: "center",
-    top: "15%",
+    top: "8%",
     borderRadius: 10,
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.6,
     shadowRadius: 5, 
     elevation: 5,
     justifyContent:"center",
@@ -662,13 +724,87 @@ const estilos = StyleSheet.create({
   expressao:{
     fontSize: 20,
     fontWeight: "bold",
-
+  },
+  sinais:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 22,
+    marginRight: 22,
+    marginTop: -20
+  },
+  sinais2:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 22,
+    marginRight: 22,
+    marginTop: -50
+  },
+  botoes:{
+    marginTop: 100
+  },
+  botaosinal:{
+    width: "45%",
+    height: 45,
+    alignItems: "center",
+    backgroundColor: "#61d1ea",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5, 
+    elevation: 5,
+    marginBottom: 60,
+    marginTop: 20,
+    borderRadius: 30,
+  },
+  textobotao:{
+    fontSize: 30,
+    fontWeight: "bolder",
+    color: "white",
+  },
+  botaoselecionado: {
+    backgroundColor: "white", // cor de destaque, ex: amarelo
+  },
+  textoselecionado:{
+    color: "#61d1ea",
+  },
+  stats:{
+    flexDirection:"row",
+    justifyContent: "center",
+    backgroundColor: "#014a7d",
+    width: 130,
+    height: 36,
+    alignSelf: "center",
+    marginTop: 45,
+    marginBottom: -42,
+    borderRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5, 
+    elevation: 5,
+  },
+  pontos:{
+    fontSize: 15,
+    fontWeight: "bold",
+    marginHorizontal: -1,
+    color: "white"
+  },
+  acertos:{
+    flexDirection: "row",
+    marginRight: 20,
+    alignItems: "center"
+  },
+  erros:{
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: -1
+  },
+    setaBack:{
+    position: "absolute",
+    left: 18,
+    top: 22, 
+    zIndex: 1,
+  },
+  iconruim:{
+    marginTop: 1
   }
-})
-
-        // <Text>Rodada {this.state.rodada}</Text>
-        // <TouchableOpacity style={estilos.botao} onPress={() => this.criar_expressao()}>
-        //     <Text>Proximo</Text>
-        // </TouchableOpacity>
-        // <Text>{this.state.expressao}</Text> 
-        // <Text> resultado: {this.state.resposta} </Text>      
+ 
+})    
