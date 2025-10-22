@@ -12,7 +12,10 @@ export default class Jogo1play extends React.Component {
         erros: 0,
         chute: '',
         resposta: '',
-        acabou: false
+        acabou: false,
+        botaoCerto: null,
+        botaoErrado: null,
+        espera: false,
       }
   }
   componentDidMount(){
@@ -563,13 +566,15 @@ export default class Jogo1play extends React.Component {
 
   validar(){ // POR ALGUM MOTIVO A FUNCAO criar_expressao() DA ERRO NO CELULAR AS VEZES, ENTAO PRECISEI CRIAR UMA OUTRA FUNCAO COM EXCEPTION 
     let ok = false;
-
+    if(this.state.espera){
+      return
+    }
     if(this.state.rodada == 0){
       while (!ok){
         try{
           this.criar_expressao();
           ok = true; 
-          this.setState(prevState => ({ rodada: prevState.rodada + 1 }));
+          this.setState({ rodada: this.state.rodada + 1 });
         } 
         catch(erro){
           console.log("Erro na primeira rodada: ", erro);
@@ -578,12 +583,16 @@ export default class Jogo1play extends React.Component {
     }
 
     else if(this.state.rodada < 10){
-      this.pontuar()
+
+      if(this.state.chute == ''){
+        return
+      }
       while (!ok){
         try{
+          this.pontuar()
           this.criar_expressao();
-          ok = true; 
-          this.setState(prevState => ({ rodada: prevState.rodada + 1, chute: ''}));
+          this.setState({ rodada: this.state.rodada + 1, chute: '' });
+          ok = true
         } 
         catch(erro){
           console.log("Erro expressao:", erro);
@@ -592,12 +601,20 @@ export default class Jogo1play extends React.Component {
     }
 
     else if(this.state.rodada == 10 && !this.state.acabou){
+    if(this.state.chute == ''){
+      return
+    }
       this.pontuar()
       this.setState({acabou: true,chute: ''})
     }
   }
   /////////////////////////////////////////////////
- escolhersinal = (sinal) => {
+  escolhersinal(sinal) {
+
+    if(this.state.espera || this.state.acabou){
+      return
+    }
+
     if (this.state.chute === sinal) {
       this.setState({ chute: '' });
     } else {
@@ -605,13 +622,19 @@ export default class Jogo1play extends React.Component {
     }
   }
 
-  ////////////////////////////////////////////////
+  ///////////////////////////////////////////////
   pontuar(){
     if(this.state.chute == this.state.resposta){
-      this.setState(prevState => ({ acertos: prevState.acertos + 1 }));
+      this.setState({ acertos: this.state.acertos + 1,botaoCerto: this.state.chute,espera: true});
     }
     else{
-      this.setState(prevState => ({ erros: prevState.erros + 1 }));
+      this.setState({ erros: this.state.erros + 1, botaoCerto: this.state.resposta, botaoErrado: this.state.chute,espera:true});
+    }
+    if(this.state.rodada != 10){
+      setTimeout(() => {
+        this.setState({botaoCerto: null, botaoErrado: null, espera: false
+        });
+      }, 700);
     }
   }
 
@@ -634,32 +657,69 @@ export default class Jogo1play extends React.Component {
         </View>
         <View style={estilos.botoes}>
           <View style={estilos.sinais}>
+
             <TouchableOpacity 
-            style={[estilos.botaosinal,this.state.chute === " + " && estilos.botaoselecionado]} 
+            style={[estilos.botaosinal,
+            this.state.chute === " + " && estilos.botaoselecionado,
+            this.state.botaoCerto === " + " && { backgroundColor: 'green' },
+            this.state.botaoErrado === " + " && { backgroundColor: 'red' }]} 
             onPress={() => this.escolhersinal(" + ")} activeOpacity={0.6}>
-              <Text style={[estilos.textobotao,this.state.chute === " + " && estilos.textoselecionado]}>+</Text>
+              <Text style={[estilos.textobotao,
+              this.state.chute === " + " && estilos.textoselecionado,
+              (this.state.botaoCerto === " + " || this.state.botaoErrado === " + ") && estilos.textobotao ]}>+</Text>
             </TouchableOpacity>
+
              <TouchableOpacity 
-            style={[estilos.botaosinal,this.state.chute === " - " && estilos.botaoselecionado]} 
+            style={[estilos.botaosinal,
+            this.state.chute === " - " && estilos.botaoselecionado,
+            this.state.botaoCerto === " - " && { backgroundColor: 'green' },
+            this.state.botaoErrado === " - " && { backgroundColor: 'red' }]} 
             onPress={() => this.escolhersinal(" - ")} activeOpacity={0.6}>
-              <Text style={[estilos.textobotao,this.state.chute === " - " && estilos.textoselecionado]}>-</Text>
+              <Text style={[estilos.textobotao,
+              this.state.chute === " - " && estilos.textoselecionado,
+              (this.state.botaoCerto === " - " || this.state.botaoErrado === " - ") && estilos.textobotao ]}>-</Text>
             </TouchableOpacity>
+
           </View>
           <View style={estilos.sinais2}>
-             <TouchableOpacity 
-            style={[estilos.botaosinal,this.state.chute === " * " && estilos.botaoselecionado]} 
+
+              <TouchableOpacity 
+            style={[estilos.botaosinal,
+            this.state.chute === " * " && estilos.botaoselecionado,
+            this.state.botaoCerto === " * " && { backgroundColor: 'green' },
+            this.state.botaoErrado === " * " && { backgroundColor: 'red' }]} 
             onPress={() => this.escolhersinal(" * ")} activeOpacity={0.6}>
-              <Text style={[estilos.textobotao,this.state.chute === " * " && estilos.textoselecionado]}>×</Text>
+              <Text style={[estilos.textobotao,
+              this.state.chute === " * " && estilos.textoselecionado,
+              (this.state.botaoCerto === " * " || this.state.botaoErrado === " * ") && estilos.textobotao ]}>×</Text>
             </TouchableOpacity>
-             <TouchableOpacity 
-            style={[estilos.botaosinal,this.state.chute === " / " && estilos.botaoselecionado]} 
+
+            <TouchableOpacity 
+            style={[estilos.botaosinal,
+            this.state.chute === " / " && estilos.botaoselecionado,
+            this.state.botaoCerto === " / " && { backgroundColor: 'green' },
+            this.state.botaoErrado === " / " && { backgroundColor: 'red' }]} 
             onPress={() => this.escolhersinal(" / ")} activeOpacity={0.6}>
-              <Text style={[estilos.textobotao,this.state.chute === " / " && estilos.textoselecionado]}>÷</Text>
+              <Text style={[estilos.textobotao,
+              this.state.chute === " / " && estilos.textoselecionado,
+              (this.state.botaoCerto === " / " || this.state.botaoErrado === " / ") && estilos.textobotao ]}>÷</Text>
             </TouchableOpacity>
+
           </View>
           <TouchableOpacity style={estilos.botao} onPress={() => this.validar()} activeOpacity={0.6}>
               <Text style={estilos.textobotao2}>Confirmar</Text>
           </TouchableOpacity>
+
+           {this.state.acabou && ( // so aparece esse botao quando acabou for verdadeiro (quando o jogo acaba)
+            <TouchableOpacity 
+              style={estilos.botao3} 
+              onPress={() => this.validar()} 
+              activeOpacity={0.6}
+            >
+              <Text><MaterialIcons name="restart-alt" size={30} color="#014a7d" /></Text>
+            </TouchableOpacity>
+          )}
+
         </View>
         <TouchableOpacity 
             style={estilos.setaBack} 
@@ -761,7 +821,7 @@ const estilos = StyleSheet.create({
     color: "white",
   },
   botaoselecionado: {
-    backgroundColor: "white", // cor de destaque, ex: amarelo
+    backgroundColor: "white"
   },
   textoselecionado:{
     color: "#61d1ea",
@@ -805,6 +865,14 @@ const estilos = StyleSheet.create({
   },
   iconruim:{
     marginTop: 1
-  }
- 
+  },
+  botao3:{
+    height: 30,
+    alignItems: "center",
+    justifyContent:"center",
+    marginBottom: 60,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: -30,
+  },
 })    
