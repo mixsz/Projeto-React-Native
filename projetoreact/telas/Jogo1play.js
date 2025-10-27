@@ -2,6 +2,8 @@ import React from 'react';
 import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Audio } from 'expo-av';
+
 export default class Jogo1play extends React.Component {
     constructor(props){
       super(props)
@@ -605,8 +607,13 @@ export default class Jogo1play extends React.Component {
       return
     }
       this.pontuar()
-      this.setState({acabou: true,chute: ''})
-    }
+      setTimeout(() => {
+          this.setState({
+            acabou: true,
+            chute: '',
+          });
+        }, 1000);
+      }
   }
   /////////////////////////////////////////////////
   escolhersinal(sinal) {
@@ -625,18 +632,127 @@ export default class Jogo1play extends React.Component {
   ///////////////////////////////////////////////
   pontuar(){
     if(this.state.chute == this.state.resposta){
+      this.somCertaResposta()
       this.setState({ acertos: this.state.acertos + 1,botaoCerto: this.state.chute,espera: true});
     }
     else{
+      this.somErradaResposta()
       this.setState({ erros: this.state.erros + 1, botaoCerto: this.state.resposta, botaoErrado: this.state.chute,espera:true});
     }
-    if(this.state.rodada != 10){
-      setTimeout(() => {
-        this.setState({botaoCerto: null, botaoErrado: null, espera: false
-        });
-      }, 700);
+    setTimeout(() => {
+      this.setState({botaoCerto: null, botaoErrado: null, espera: false
+      });
+    }, 700); 
+  }
+
+  resetar() {
+    if (this.soundAtual) {
+      this.soundAtual.stopAsync();
+      this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+    this.setState({
+      expressao:'',
+      rodada: 0,
+      acertos: 0,
+      erros: 0,
+      chute: '',
+      resposta: '',
+      acabou: false,
+      botaoCerto: null,
+      botaoErrado: null,
+      espera: false,
+    }, () => {
+      this.validar();
+    });
+  }
+
+   async somCertaResposta(){
+    const { sound } = await Audio.Sound.createAsync(
+      require('../assets/respostacerta.mp3')
+    );
+    await sound.setVolumeAsync(0.2);
+    await sound.playAsync()
+    this.soundAtual = sound;
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync()
+        this.soundAtual = null;
+      }
+    });
+
+  }
+
+  async somErradaResposta(){
+    const { sound } = await Audio.Sound.createAsync(
+      require('../assets/respostaerrada.mp3')
+    );
+    await sound.setVolumeAsync(0.2);
+    await sound.playAsync()
+    this.soundAtual = sound;
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync()
+        this.soundAtual = null;
+      }
+    });
+  }
+
+  async somDerrota(){
+
+  if (this.soundAtual) {
+    await this.soundAtual.stopAsync();
+    await this.soundAtual.unloadAsync();
+    this.soundAtual = null;
+  }
+
+    const { sound } = await Audio.Sound.createAsync(
+      require('../assets/perdeu.mp3')
+    );
+    await sound.playAsync()
+    this.soundAtual = sound;
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync();
+        this.soundAtual = null;
+      }
+    });
+  }
+
+  async somVitoria(){
+
+  if (this.soundAtual) {
+    await this.soundAtual.stopAsync();
+    await this.soundAtual.unloadAsync();
+    this.soundAtual = null;
+  }
+
+  const { sound } = await Audio.Sound.createAsync(
+      require('../assets/ganhou.mp3')
+    );
+    await sound.playAsync()
+    this.soundAtual = sound;
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync();
+      this.soundAtual = null;
+      }
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (!prevState.acabou && this.state.acabou && this.state.acertos < 6){
+      this.somDerrota()
+    }
+    if (!prevState.acabou && this.state.acabou && this.state.acertos >= 6 ){
+      this.somVitoria()
     }
   }
+
 
     render() {
     return (
@@ -710,10 +826,10 @@ export default class Jogo1play extends React.Component {
               <Text style={estilos.textobotao2}>Confirmar</Text>
           </TouchableOpacity>
 
-           {this.state.acabou && ( // so aparece esse botao quando acabou for verdadeiro (quando o jogo acaba)
+           {this.state.acabou && ( // so aparece esse botao quando {acabou} for verdadeiro (quando o jogo acaba)
             <TouchableOpacity 
               style={estilos.botao3} 
-              onPress={() => this.validar()} 
+              onPress={() => this.resetar()} 
               activeOpacity={0.6}
             >
               <Text><MaterialIcons name="restart-alt" size={30} color="#014a7d" /></Text>
@@ -726,6 +842,13 @@ export default class Jogo1play extends React.Component {
             onPress={() => this.props.navigation.navigate('Jogo1')} activeOpacity={0.6}>
             <Text style={{ fontSize: 46, color: "#014a7d" }}>←</Text>
         </TouchableOpacity>
+
+        {this.state.acabou && this.state.acertos >= 6 && (
+          <Image source={require('../assets/Aprovado.png')}style={estilos.imagem}/>
+        )}
+         {this.state.acabou && this.state.acertos < 6 && (
+          <Image source={require('../assets/desaprovado.png')}style={estilos.imagem} />
+        )}
       </View>
     );
   }
@@ -780,6 +903,19 @@ const estilos = StyleSheet.create({
     elevation: 5,
     justifyContent:"center",
     alignItems: "center",
+    resizeMode: "cover"
+  },
+  imagem:{
+    height: 225,
+    width: "92%",
+    position: "absolute",
+    alignSelf: "center",
+    top: "23%",
+    borderRadius: 10,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 5, 
+    elevation: 5,
   },
   expressao:{
     fontSize: 20,
@@ -873,6 +1009,6 @@ const estilos = StyleSheet.create({
     marginBottom: 60,
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: -30,
+    marginTop: -40,
   },
 })    
