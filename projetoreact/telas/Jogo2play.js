@@ -1,186 +1,179 @@
-import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image,ScrollView,ImageBackground } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+  import React from 'react';
+  import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image,ScrollView,ImageBackground } from 'react-native';
+  import Ionicons from '@expo/vector-icons/Ionicons';
+  import Fontisto from '@expo/vector-icons/Fontisto';
+  import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export default class Jogo2play extends React.Component {
-    render() {
+  const cartas = {
+    agua: {
+      1: require('../assets/Aprovado.png'),
+      2: require('../assets/cardduel.png'),
+      3: require('../assets/desaprovado.png'),
+      4: require('../assets/fogao.jpg'),
+      5: require('../assets/logojogo1.png'),
+      6: require('../assets/Aprovado.png'),
+      7: require('../assets/cardduel.png'),
+      8: require('../assets/logojogo1.png'),
+    },
+    fogo: {
+      1: require('../assets/Aprovado.png'),
+      2: require('../assets/cardduel.png'),
+      3: require('../assets/desaprovado.png'),
+      4: require('../assets/fogao.jpg'),
+      5: require('../assets/logojogo1.png'),
+      6: require('../assets/Aprovado.png'),
+      7: require('../assets/cardduel.png'),
+      8: require('../assets/logojogo1.png'),
+    },
+    neve: {
+      1: require('../assets/Aprovado.png'),
+      2: require('../assets/cardduel.png'),
+      3: require('../assets/desaprovado.png'),
+      4: require('../assets/fogao.jpg'),
+      5: require('../assets/logojogo1.png'),
+      6: require('../assets/Aprovado.png'),
+      7: require('../assets/cardduel.png'),
+      8: require('../assets/logojogo1.png'),
+    }
+  };
+
+  export default class Jogo2play extends React.Component {
+    constructor(props){
+        super(props)
+        this.state={
+          cartaSelecionada: null,
+          deck: this.criarDeck(),
+        }
+    }
+
+    criarCarta(){ // SORTEIA DE 0 A 2 PRA VER QUAL ELEMENTO SERÁ, DEPOIS ESCOLHE DE 0+1 A 7+1 O NIVEL E RETORNA A CARTA COM TIPO, NIVEL E A IMAGEM
+      const elementos = ['agua', 'fogo', 'neve'];
+      const tipo = elementos[Math.floor(Math.random() * 3)];
+      const nivel = Math.floor(Math.random() * 8) + 1 // pra n cair 0
+      return{
+        tipo, 
+        nivel,
+        imagem: cartas[tipo][nivel],
+      }
+    }
+
+    criarDeck(){
+      const qtd = 5
+      const deck = []
+      for (let i = 0; i < qtd; i++){ // CRIA 5 CARTAS...
+        deck.push(this.criarCarta())
+      }
+      return deck
+    }
+
+
+  carta({ tipo, nivel, imagem, onPress, index}){
+    const icones={
+      fogo: <Fontisto name="fire" size={16} color="orange" />,
+      agua: <Ionicons name="water-sharp" size={16} color="#00c2ff" />,
+      neve: <FontAwesome name="snowflake-o" size={16} color="white" />,
+    };
+
+    const coresBorda={
+      fogo: 'yellow',
+      agua: 'blue',
+      neve: '#85f8ff',
+    };
+    const corFinal = this.state.cartaSelecionada === index ? 'green' : coresBorda[tipo];
+    const corStatsFinal = this.state.cartaSelecionada === index ? 'green' : coresBorda[tipo];
+
     return (
-      <View style={estilos.tudo}>
-        <View style={estilos.deckinteiro}>
-          <ImageBackground source={require('../assets/fogao.jpg')} style={estilos.cartaFogo}>
-            <View style={estilos.statsFogo}>
-              <Text style={estilos.elementoFogo}><Fontisto name="fire" size={16} color="orange" /></Text>
-              <Text style={estilos.pontoFogo}>5</Text>
-            </View>
-          </ImageBackground>
-
-          <ImageBackground source={require('../assets/Aprovado.png')} style={estilos.cartaAgua}>
-            <View style={estilos.statsAgua}>
-              <Text style={estilos.elementoAgua}><Ionicons name="water-sharp" size={16} color="#00c2ff"/></Text>
-              <Text style={estilos.pontoAgua}>5</Text>
-            </View>
-          </ImageBackground>
-
-          <ImageBackground source={require('../assets/cardduel.png')} style={estilos.cartaNeve}>
-            <View style={estilos.statsNeve}>
-              <Text style={estilos.elementoNeve}><FontAwesome name="snowflake-o" size={16} color="white" /></Text>
-              <Text style={estilos.pontoNeve}>5</Text>
-            </View>
-          </ImageBackground>
-
-          <ImageBackground source={require('../assets/logojogo1.png')} style={estilos.cartaFogo}>
-            <View style={estilos.statsFogo}>
-              <Text style={estilos.elementoFogo}><Fontisto name="fire" size={16} color="orange" /></Text>
-              <Text style={estilos.pontoFogo}>5</Text>
-            </View>
-          </ImageBackground>
-
-          <ImageBackground source={require('../assets/fogao.jpg')} style={estilos.cartaFogo}>
-            <View style={estilos.statsFogo}>
-              <Text style={estilos.elementoFogo}><Fontisto name="fire" size={16} color="orange" /></Text>
-              <Text style={estilos.pontoFogo}>5</Text>
-            </View>
-          </ImageBackground>
-        </View>
-         <TouchableOpacity style={estilos.botao} activeOpacity={0.6}>
-            <Ionicons name="hand-right-sharp" size={40} color="#14ff00" />
-          </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={onPress} activeOpacity={1}>
+      <ImageBackground source={imagem} style={[estilos.carta, { borderColor: corFinal }]}>
+        <View style={[estilos.stats, { backgroundColor: corStatsFinal }]}>
+            <Text style={estilos.elemento}>{icones[tipo]}</Text>
+            <Text style={estilos.nivel}>{nivel}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
     );
   }
-}
-const estilos = StyleSheet.create({
-  tudo:{
-    flex: 1,
-    backgroundColor: "black",
-  },
-  deckinteiro:{
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    backgroundColor: "#edebe9",
-    height: 1000,
-    paddingTop: 20,
-    width: "100%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    top: "45%",
-    borderRadius: 30,
-    borderTopWidth: 8,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderColor: "#c88a3d"
-  },
-  botao:{
-    position: "absolute",
-    borderRadius: 100,
-    alignItems: "center",
-    justifyContent:"center",
-    marginTop: 20,
-    left: "38%",
-    top: "88%",
-    width: "25%",
-    height: 60,
-    backgroundColor: "#2f2d2d",
-    paddingRight: 4,
-    paddingVertical: 2,
-    shadowOffset: { width: 0, height: 3},
-    shadowOpacity: 0.5,
-    shadowRadius: 5, 
-    elevation: 5,
-  },
-  cartaFogo:{
-    margin: 3,
-    height: 130,
-    width: 100,
-    backgroundColor: "white",
-    borderWidth: 4,
-    borderColor: "yellow",
-    borderRadius: 10,
-    overflow: "hidden",
-    elevation: 4,             
-    shadowColor: "#000",    
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 1, height: 2},
-    shadowRadius: 3,
-  }, 
-  pontoFogo:{
-    fontFamily: "sans-serif",
-    fontSize:16,
-    color: "black",
-    fontWeight: "bold",
-    marginLeft: 3
-  },
-  elementoFogo:{
-    marginLeft: 2
-  },
-  statsFogo:{
-    backgroundColor: "yellow",
-    width: 20,
-    borderBottomRightRadius: 5,
-  },
-  cartaAgua:{
-    margin: 3,
-    height: 130,
-    width: 100,
-    backgroundColor: "white",
-    borderWidth: 4,
-    borderColor: "blue",
-    borderRadius: 10,
-    overflow: "hidden",
-    elevation: 4,             
-    shadowColor: "#000",    
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 1, height: 2},
-    shadowRadius: 3,
-  },
-   statsAgua:{
-    backgroundColor: "blue",
-    width: 20,
-    borderBottomRightRadius: 5,
-  },
-  elementoAgua:{
-    marginLeft: 0
-  },
-  pontoAgua:{
-    fontFamily: "sans-serif",
-    fontSize:16,
-    color: "white",
-    fontWeight: "bold",
-    marginLeft: 3
-  },
-  cartaNeve:{
-    margin: 3,
-    height: 130,
-    width: 100,
-    backgroundColor: "white",
-    borderWidth: 4,
-    borderColor: "#85f8ff",
-    borderRadius: 10,
-    overflow: "hidden",
-    elevation: 4,             
-    shadowColor: "#000",    
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 1, height: 2},
-    shadowRadius: 3,
-  },
-   statsNeve:{
-    backgroundColor: "#85f8ff",
-    width: 20,
-    borderBottomRightRadius: 5,
-  },
-  elementoNeve:{
-    marginLeft: 2
-  },
-  pontoNeve:{
-    fontFamily: "sans-serif",
-    fontSize:16,
-    color: "black",
-    fontWeight: "bold",
-    marginLeft: 3
-  },
 
-})
+    render() {
+      return(
+          <View style={estilos.tudo}>
+            <View style={estilos.deckinteiro}>
+              {this.state.deck.map((c, index) => 
+                this.carta({ 
+                  tipo: c.tipo, 
+                  nivel: c.nivel, 
+                  imagem: c.imagem,
+                  index, // pra saber qual carta foi selecionada e mudar a cor
+                  onPress: () => this.setState({ cartaSelecionada: index })
+                })
+              )}
+            </View>
+            <TouchableOpacity style={estilos.botao} activeOpacity={0.6}>
+              <FontAwesome name="hand-stop-o" size={70} color="black" />
+            </TouchableOpacity>
+        </View>
+      );
+    }
+  }
+
+  const estilos = StyleSheet.create({
+    tudo:{
+      flex: 1,
+      backgroundColor: "black",
+    },
+    deckinteiro:{
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#dcd5d3",
+      height: 1000,
+      paddingTop: 30,
+      width: "100%",
+      alignSelf: "center",
+      top: "65%",
+      borderRadius: 30,
+      borderWidth: 3,
+      borderColor: "#6b6b6b"
+    },
+    botao:{
+      position: "absolute",
+      borderRadius: 100,
+      alignItems: "center",
+      justifyContent:"center",
+      marginTop: 20,
+      left: "40%",
+      top: "84%",
+    },
+    carta: {
+    margin: 2,
+    height: 100,
+    width: 64,
+    backgroundColor: "white",
+    borderWidth: 4,
+    borderRadius: 10,
+    overflow: "hidden",
+    elevation: 4,             
+    shadowColor: "#000",    
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 1, height: 2 },
+    shadowRadius: 3,
+  },
+  stats: {
+    width: 16,
+    borderBottomRightRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  nivel: {
+    fontFamily: "sans-serif",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "black",
+    marginLeft: -3
+  },
+  elemento:{
+    marginLeft: -3
+  }
+
+  })
