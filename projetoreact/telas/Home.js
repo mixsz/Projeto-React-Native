@@ -27,8 +27,8 @@ export default class Home extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2nav')} activeOpacity={0.6}>
               <View style ={estilos.nomeicon}>
-                <MaterialCommunityIcons name="material-design" size={30} color="#d0f6fe" style={estilos.iconz} />
-                <Text style={estilos.textobotao1}> Alguma coisa </Text>
+               <MaterialCommunityIcons name="cards" size={30} color="#d0f6fe" />
+                <Text style={estilos.textobotao1}> Card Duel </Text>
               </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')} activeOpacity={0.6}>
