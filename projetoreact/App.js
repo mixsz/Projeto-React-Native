@@ -18,8 +18,18 @@ export default class App extends React.Component {
   render() {
     return(
     <NavigationContainer>
-      <Jogo2play/>
+      <Nav/>
     </NavigationContainer>
     );
   }
 }
+
+/**
+ * sites q preciso:
+ * 
+ * https://icons.expo.fyi/Index
+ * https://www.remove.bg/pt-br/upload
+ * https://pixabay.com/sound-effects/search/
+ * 
+ * 
+ */

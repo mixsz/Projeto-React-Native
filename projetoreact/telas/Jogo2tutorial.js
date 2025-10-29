@@ -35,7 +35,7 @@ export default class Jogo2tutorial extends React.Component {
         <TouchableOpacity 
             style={estilos.setaBack} 
             onPress={() => this.props.navigation.navigate('Jogo2')}>
-            <Text style={{ fontSize: 46, color: "#dff6fb" }}>←</Text>
+            <Text style={{ fontSize: 46, color: "black" }}>←</Text>
         </TouchableOpacity>
       </View>
     );
@@ -44,7 +44,7 @@ export default class Jogo2tutorial extends React.Component {
 const estilos = StyleSheet.create({
   tudo:{
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#dff6fb",
   },
     logo:{
     height: 80,
@@ -59,8 +59,8 @@ const estilos = StyleSheet.create({
     marginBottom: 10
   },
   box:{
-      backgroundColor: "#dff6fb",
-      height: 1000,
+      backgroundColor: "#d0e7e6",
+      height: 590,
       paddingTop: 20,
       borderRadius: 50,
     },
@@ -86,12 +86,12 @@ const estilos = StyleSheet.create({
     paddingLeft: 5,
   },
    botao:{
-    borderRadius: 10,
+    borderRadius: 20,
     width: "60%",
-    height: 45,
+    height: 40,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "black",
+    backgroundColor: "#414040",
     marginLeft: "auto",
     marginRight: "auto",
     shadowOffset: { width: 0, height: 4 },
@@ -101,10 +101,10 @@ const estilos = StyleSheet.create({
     marginTop: 20
   },
    textobotao2:{
-     fontWeight: "bold",
+    fontWeight: "bold",
     fontFamily: "sans-serif",
     fontSize:18,
-    color: "#dff6fb",
+    color: "#b3dde6",
   },  
   setaBack:{
     position: "absolute",

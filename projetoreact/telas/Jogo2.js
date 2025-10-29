@@ -11,19 +11,19 @@ export default class Jogo2 extends React.Component {
            <View style={estilos.botoes}>
                <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2play')} activeOpacity={0.6}>
                 <View style={estilos.nomeicons}>
-                  <Ionicons name="game-controller" size={24} color="black" style={estilos.icon}/>
+                  <Ionicons name="game-controller" size={24} color="#b3dde6" style={estilos.icon}/>
                   <Text style={estilos.textobotao2}> Jogar </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2tutorial')} activeOpacity={0.6}>
                   <View style={estilos.nomeicons}>
-                    <Entypo name="help-with-circle" size={24} color="black" style={estilos.icon2} />
+                    <Entypo name="help-with-circle" size={24} color="#b3dde6" style={estilos.icon2} />
                     <Text style={estilos.textobotao1}> Tutorial </Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Home')} activeOpacity={0.7}>
                   <View style={estilos.nomeicons}>
-                    <Ionicons name="arrow-back-outline" size={30}color="black" style={estilos.icon2} />
+                    <Ionicons name="arrow-back-outline" size={30}color="#b3dde6" style={estilos.icon2} />
                     <Text style={estilos.textobotao3}> Voltar </Text>
                 </View>
               </TouchableOpacity>
@@ -35,7 +35,7 @@ export default class Jogo2 extends React.Component {
 const estilos = StyleSheet.create({
   tudo:{
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "#d0f6fe"
   },
   botao:{
     borderRadius: 13,
@@ -43,21 +43,21 @@ const estilos = StyleSheet.create({
     height: 80,
     alignItems: "center",
     justifyContent:"center",
-    backgroundColor: "#dff6fb",
+    backgroundColor: "#414040",
     marginLeft: -1,
     marginBottom: 60,
   },
   textobotao2:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: 'black',
+    color: '#b3dde6',
     fontWeight: "bold",
     right: 8
   },
     textobotao3:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: 'black',
+    color: '#b3dde6',
     fontWeight: "bold",
     right: 3
   },
@@ -93,7 +93,7 @@ const estilos = StyleSheet.create({
     textobotao1:{
     fontSize: 20,
     fontFamily: "sans-serif",
-    color: 'black',
+    color: '#b3dde6',
     fontWeight: "bold",
     left: 1
   },
