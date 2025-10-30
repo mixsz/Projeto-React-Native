@@ -18,7 +18,7 @@ export default class App extends React.Component {
   render() {
     return(
     <NavigationContainer>
-      <Nav/>
+      <Jogo2play/>
     </NavigationContainer>
     );
   }

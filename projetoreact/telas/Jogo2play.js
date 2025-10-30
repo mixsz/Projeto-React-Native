@@ -4,7 +4,11 @@
   import Fontisto from '@expo/vector-icons/Fontisto';
   import FontAwesome from '@expo/vector-icons/FontAwesome';
   import fundo from '../assets/dojo.webp'; // sua imagem
+  import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+  const setaDireita = <FontAwesome name="long-arrow-right" size={28} color="black" />
+  const setaEsquerda = <FontAwesome name="long-arrow-left" size={28} color="black" />
+  const igual = <FontAwesome5 name="equals" size={25} color="black" />
   const cartas = {
     agua: {
       1: require('../assets/Aprovado.png'),
@@ -42,18 +46,24 @@
       constructor(props){
         super(props)
         this.state={
-          cartaSelecionada: null,
-          deck: this.criarDeck(),
+          cartaIndex: null,
+          cartaEscolhidaUser: null,  // carta escolhida n é a confirmacao ainda
+          deckUser: this.criarDeck(),
+          deckCasa: this.criarDeck(),
           pontosUser:{
-            agua: 1,
-            fogo: 2,
-            neve: 3,
+            agua: 0,
+            fogo: 0,
+            neve: 0,
           },
           pontosCasa:{
-            agua: 2,
+            agua: 0,
             fogo: 0,
-            neve: 2,
+            neve: 0,
           },
+          permissao: true,
+          cartaSelecionadaUser: null, // aqui é quando a carta foi confirmada
+          cartaSelecionadaCasa: null,
+          mensagem: null,
         }
       }
 
@@ -69,41 +79,252 @@
     }
 
     criarDeck(){
-      const deck = [];
+      const deckUser = [];
 
-      while(deck.length < 5){
+      while(deckUser.length < 5){
         const carta = this.criarCarta();
-        const jaExiste = deck.some(c => c.tipo === carta.tipo && c.nivel === carta.nivel); // verifica se a carta ja ta no deck p n repetir..
+        const jaExiste = deckUser.some(c => c.tipo === carta.tipo && c.nivel === carta.nivel); // verifica se a carta ja ta no deckUser p n repetir..
         if (!jaExiste) {
-          deck.push(carta);
+          deckUser.push(carta);
         }
       }
 
-      return deck;
+      return deckUser;
     }
 
 
   selecionarCarta(index){
-      if(this.state.cartaSelecionada != index){
-        this.setState({ cartaSelecionada: index })
-      }
-      else{
-        this.setState({ cartaSelecionada: null })
-      }
+    if(!this.state.permissao){
+      return
+    }
+    const carta = this.state.deckUser[index];
+    if(this.state.cartaIndex !== index){
+      this.setState({cartaIndex: index, cartaEscolhidaUser: carta,
+      });
+    } 
+    else{
+      this.setState({cartaIndex: null, cartaEscolhidaUser: null, 
+      })
+    }
   }
+
+  jogar(){
+    if(this.state.cartaIndex == null || !this.state.permissao){
+      return
+    }
+    const indexCasa = Math.floor(Math.random() * this.state.deckCasa.length)
+    const cartaCasa = this.state.deckCasa[indexCasa]
+
+      this.setState({
+        cartaSelecionadaUser: this.state.cartaEscolhidaUser,
+        cartaSelecionadaCasa: cartaCasa,
+        permissao: false
+      });
+
+      setTimeout(() => {
+       this.verificaRodada(this.state.cartaEscolhidaUser, cartaCasa);
+      }, 1500);
+
+      setTimeout(() => {
+        this.atualizarCartaUser(this.state.cartaIndex);
+        this.atualizarCartaCasa(indexCasa);
+        this.setState({
+          cartaSelecionadaUser: null,
+          cartaSelecionadaCasa: null,
+          cartaEscolhidaUser: null,
+          cartaIndex: null, 
+          permissao: true,
+          mensagem: null
+        });
+      }, 3000);
+  }
+
+  verificaRodada(cartaUser,cartaCasa){
+    let mensagem;
+    const icones = {
+      fogo: <Fontisto name="fire" size={28} color="orange" />,
+      agua: <Ionicons name="water-sharp" size={28} color="#00c2ff" />,
+      neve: <FontAwesome name="snowflake-o" size={27} color="#58f5ff" />,
+    };
+    if(cartaUser.tipo === "fogo" && cartaCasa.tipo === "neve"){
+      this.setState(prevState =>({
+        pontosUser:{ 
+          ...prevState.pontosUser,
+          fogo: prevState.pontosUser.fogo + 1,
+       }}))
+        mensagem=(
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+            {icones[cartaUser.tipo]}
+            {setaDireita}
+            {icones[cartaCasa.tipo]}
+          </View>
+       );
+       this.setState({ mensagem })
+       return 1
+    }
+
+    else if(cartaUser.tipo === "agua" && cartaCasa.tipo === "fogo"){
+      this.setState(prevState =>({
+        pontosUser:{ 
+          ...prevState.pontosUser, 
+          agua: prevState.pontosUser.agua + 1
+       }}))
+      mensagem=(
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+            {icones[cartaUser.tipo]}
+            {setaDireita}
+            {icones[cartaCasa.tipo]}
+          </View>
+       );
+       this.setState({ mensagem })
+       return 1
+    }
+
+    else if(cartaUser.tipo === "neve" && cartaCasa.tipo === "agua"){
+      this.setState(prevState =>({
+        pontosUser:{ 
+          ...prevState.pontosUser, 
+          neve: prevState.pontosUser.neve + 1
+       }}))
+       mensagem=(
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+            {icones[cartaUser.tipo]}
+            {setaDireita}
+            {icones[cartaCasa.tipo]}
+          </View>
+       );
+       this.setState({ mensagem })
+       return 1
+    }
+    
+    else if(cartaUser.tipo === cartaCasa.tipo){
+      if(cartaUser.nivel > cartaCasa.nivel){
+        this.setState(prevState => ({
+          pontosUser:{
+            ...prevState.pontosUser,
+            [cartaUser.tipo]: prevState.pontosUser[cartaUser.tipo] + 1
+          }
+        }))
+        mensagem = (
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {icones[cartaUser.tipo]}
+              <Text style={estilos.mensagemEstilo}>
+                ({cartaUser.nivel})
+              </Text>
+            </View>
+            <Text style={{ marginHorizontal: 5 }}>{setaDireita}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {icones[cartaCasa.tipo]}
+              <Text  style={estilos.mensagemEstilo}>
+                ({cartaCasa.nivel})
+              </Text>
+            </View>
+          </View>
+        );
+
+       this.setState({ mensagem })
+        return 1
+      }
+      else if(cartaUser.nivel < cartaCasa.nivel){
+        this.setState(prevState =>({
+          pontosCasa:{
+            ...prevState.pontosCasa,
+            [cartaCasa.tipo]: prevState.pontosCasa[cartaCasa.tipo] + 1
+          }
+        }))
+        mensagem = (
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {icones[cartaUser.tipo]}
+              <Text  style={estilos.mensagemEstilo}>
+                ({cartaUser.nivel})
+              </Text>
+            </View>
+            <Text style={{ marginHorizontal: 5 }}>{setaDireita}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {icones[cartaCasa.tipo]}
+              <Text  style={estilos.mensagemEstilo}>
+                ({cartaCasa.nivel})
+              </Text> 
+            </View>
+          </View>
+        );
+
+       this.setState({ mensagem })
+        return 0
+      }
+      else{ // empate
+       mensagem=(
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+            {icones[cartaUser.tipo]}
+            {igual}
+            {icones[cartaCasa.tipo]}
+          </View>
+       );
+       this.setState({ mensagem })
+        return 2
+      }
+    }
+
+    else{
+      this.setState(prevState =>({
+        pontosCasa:{
+          ...prevState.pontosCasa,
+          [cartaCasa.tipo]: prevState.pontosCasa[cartaCasa.tipo] + 1
+        }
+      }))
+      mensagem=(
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+          {icones[cartaUser.tipo]}
+          {setaEsquerda}
+          {icones[cartaCasa.tipo]}
+        </View>
+      );
+      this.setState({ mensagem })
+      return 0
+    }
+  }
+
+  atualizarCartaUser(index){
+    const novoDeck = [...this.state.deckUser]
+
+    let novaCarta = this.criarCarta()
+    while (novoDeck.some(c => c.tipo === novaCarta.tipo && c.nivel === novaCarta.nivel)){
+        novaCarta = this.criarCarta()
+    }
+    novoDeck[index] = novaCarta
+    this.setState({
+      deckUser: novoDeck
+    });
+  }
+
+  atualizarCartaCasa(index){
+    const novoDeckCasa = [...this.state.deckCasa];
+
+    let novaCarta = this.criarCarta();
+    while (novoDeckCasa.some(c => c.tipo === novaCarta.tipo && c.nivel === novaCarta.nivel)){
+        novaCarta = this.criarCarta();
+    }
+    novoDeckCasa[index] = novaCarta
+    this.setState({
+      deckCasa: novoDeckCasa
+    })
+  }
+
   
-  CartaPlacar = ({ tipo }) =>{
+  CartaPlacar=({ tipo })=>{
     const cores = {
       fogo: 'orange',
       agua: '#00c2ff',
       neve: '#85f8ff',
-    };
+    }
 
     const icones = {
-      fogo: <Fontisto name="fire" size={16} color="orange" />,
-      agua: <Ionicons name="water-sharp" size={18} color="#00c2ff" />,
-      neve: <FontAwesome name="snowflake-o" size={16} color="#85f8ff" />,
-    };
+      fogo: <Fontisto name="fire" size={16} color="orange"/>,
+      agua: <Ionicons name="water-sharp" size={18} color="#00c2ff"/>,
+      neve: <FontAwesome name="snowflake-o" size={16} color="#85f8ff"/>,
+    }
 
     return (
       <View style={{
@@ -119,8 +340,8 @@
       }}>
         {icones[tipo]}
       </View>
-    );
-  };
+    )
+  }
 
   carta({ tipo, nivel, imagem, onPress, index}){
     const icones={
@@ -135,7 +356,7 @@
       neve: '#85f8ff',
     };
     const corFinal =
-        this.state.cartaSelecionada === 
+        this.state.cartaIndex === 
         index ? 'green' : // se for a selecionada fica verde
         nivel === 8 && tipo === "fogo" ? '#6a2020' :
         nivel === 8 && tipo === "agua" ? '#272972' :
@@ -143,7 +364,7 @@
         coresBorda[tipo];
 
     const corStatsFinal =
-      this.state.cartaSelecionada ===
+      this.state.cartaIndex ===
       index? 'green' :
       nivel === 8 && tipo === "fogo" ? '#6a2020' :
       nivel === 8 && tipo === "agua" ? '#272972' :
@@ -168,11 +389,47 @@
     );
   }
 
+   renderCartaGrande(carta) {
+      const { tipo, nivel, imagem } = carta;
+      const icones = {
+        fogo: <Fontisto name="fire" size={32} color="orange" />, // tamanho maior
+        agua: <Ionicons name="water-sharp" size={32} color="#00c2ff" />,
+        neve: <FontAwesome name="snowflake-o" size={32} color="white" />,
+      };
+      const coresBorda = {
+        fogo: 'yellow',
+        agua: '#183ccb',
+        neve: '#85f8ff',
+      };
+      const corFinal =
+        nivel === 8 && tipo === "fogo" ? '#6a2020' :
+        nivel === 8 && tipo === "agua" ? '#272972' :
+        nivel === 8 && tipo === "neve" ? '#358f8f' :
+        coresBorda[tipo];
+      const corStatsFinal =
+        nivel === 8 && tipo === "fogo" ? '#6a2020' :
+        nivel === 8 && tipo === "agua" ? '#272972' :
+        nivel === 8 && tipo === "neve" ? '#358f8f' :
+        coresBorda[tipo];
+      const corPalavra = nivel === 8 ? 'white' : 'black';
+      return (
+        <ImageBackground source={imagem} style={[estilos.cartaGrande, { borderColor: corFinal }]}>
+          <View style={[estilos.statsGrande, { backgroundColor: corStatsFinal }]}>
+            <Text style={estilos.elementoGrande}>{icones[tipo]}</Text>
+            <Text style={[estilos.nivelGrande, { color: corPalavra }]}>
+              {nivel}
+            </Text>
+          </View>
+        </ImageBackground>
+      );
+    }
+
+
     render() {
       return(
           <ImageBackground source={fundo} style={estilos.tudo}>
-            <View style={estilos.deckinteiro}>
-              {this.state.deck.map((c, index) => 
+            <View style={estilos.deckUserinteiro}>
+              {this.state.deckUser.map((c, index) => 
                 this.carta({ 
                   tipo: c.tipo, 
                   nivel: c.nivel, 
@@ -183,8 +440,8 @@
               )}
             </View>
             
-            <TouchableOpacity style={estilos.botao} activeOpacity={0.8}>
-              <FontAwesome style={[estilos.mao,this.state.cartaSelecionada !== null && { backgroundColor: "#3d8537" }]} 
+            <TouchableOpacity style={estilos.botao} activeOpacity={0.8} onPress={() => this.jogar()}>
+              <FontAwesome style={[estilos.mao,this.state.cartaIndex !== null && { backgroundColor: "#3d8537" }]} 
                 name="hand-stop-o" size={58} color="black" />
             </TouchableOpacity>
 
@@ -218,6 +475,18 @@
                 </View>
               </View>
             </View>
+            
+           {this.state.cartaSelecionadaUser && this.state.cartaSelecionadaCasa && (
+          <View style={estilos.centro}>
+            {this.renderCartaGrande(this.state.cartaSelecionadaUser)}
+            {this.renderCartaGrande(this.state.cartaSelecionadaCasa)}
+            {this.state.mensagem && (
+              <View style={estilos.minibox}> 
+                {this.state.mensagem}
+              </View>
+            )}
+          </View>
+        )}
 
           <View style={estilos.linha}/>
         </ImageBackground>
@@ -230,7 +499,7 @@
       flex: 1,
       backgroundColor: "white",
     },
-    deckinteiro:{
+    deckUserinteiro:{
       flexDirection: "row",
       flexWrap: "wrap",
       justifyContent: "center",
@@ -270,7 +539,7 @@
     borderBottomRightRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    height: 35
+    height: 35,
   },
   nivel:{
     fontFamily: "sans-serif",
@@ -291,7 +560,8 @@
     textAlignVertical: 'center',
     lineHeight: 65,      
     right: -3,
-    bottom: -17    
+    bottom: -17,
+    borderWidth: 1
   },
  placar:{
     position: "absolute",
@@ -344,10 +614,69 @@
       height: 89, 
       width: 30,
     },
-   slotElemento:{
-    height: 80, 
-    width: 30, 
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    slotElemento:{
+      height: 80, 
+      width: 30, 
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+    centro:{
+      position: 'absolute',
+      top: '27%',
+      left: 0,
+      right: 0,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      zIndex: 1000,
+    },
+    cartaGrande: {
+      width: 150,
+      height: 200,
+      borderWidth: 6,
+      borderColor: 'black',
+      borderRadius: 11,
+      overflow: 'hidden',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white',
+    },
+    statsGrande: {
+      position: 'absolute',
+      bottom: 125,
+      right: 106, 
+      width: 34,
+      height: 70,
+      borderBottomRightRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  elementoGrande: {
+    marginLeft: -3,
+  },
+  nivelGrande: {
+    fontFamily: "sans-serif",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    marginLeft: -3,
+  },
+  minibox:{
+    position: "absolute",
+    backgroundColor: "white",
+    top: "145%",
+    height: 50,
+    width: "50%",
+    borderRadius: 25,
+    borderWidth: 4,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  mensagemEstilo:{
+    fontFamily: "sans-serif",
+    fontSize:22,
+    fontWeight: "bold",
+    marginLeft: 5,
+    marginBottom: 2
   }
 })
