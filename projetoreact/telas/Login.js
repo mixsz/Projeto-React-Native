@@ -21,7 +21,7 @@ export default class Login extends React.Component {
             else{
                 this.setState({mensagem: "Senha incorreta!"})
             }
-          } 
+          }
           else {
             this.setState({mensagem: "Usuário não encontrado!"})
           }

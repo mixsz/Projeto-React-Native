@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image } from 'react-native';
+import { Text,View,StyleSheet, TouchableOpacity,Image } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Audio } from 'expo-av';
@@ -8,6 +8,7 @@ export default class Jogo1play extends React.Component {
     constructor(props){
       super(props)
       this.state={
+        perfil: this.props.route.params.perfil,
         expressao:'',
         rodada: 0,
         acertos: 0,
@@ -752,7 +753,6 @@ export default class Jogo1play extends React.Component {
       this.somVitoria()
     }
   }
-
 
     render() {
     return (
