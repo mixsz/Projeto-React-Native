@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image,ScrollView  } from 'react-native';
+import { Text,View,StyleSheet, TouchableOpacity,Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import FontAwesome from '@expo/vector-icons/FontAwesome';

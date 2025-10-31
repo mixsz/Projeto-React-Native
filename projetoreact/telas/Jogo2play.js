@@ -1,5 +1,5 @@
   import React from 'react';
-  import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image,ScrollView,ImageBackground } from 'react-native';
+  import { Text,View,StyleSheet, TouchableOpacity,ImageBackground } from 'react-native';
   import Ionicons from '@expo/vector-icons/Ionicons';
   import Fontisto from '@expo/vector-icons/Fontisto';
   import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -41,6 +41,13 @@
       8: require('../assets/logojogo1.png'),
     }
   };
+  const imagens = [
+  require('../assets/senseiagua2.png'),
+  require('../assets/senseineve2.png'),
+  require('../assets/senseifogo2.png'),
+  require('../assets/senseielemento2.png'),
+  require('../assets/senseiperdeu.png'),
+];
 
   export default class Jogo2play extends React.Component {
       constructor(props){
@@ -64,6 +71,8 @@
           cartaSelecionadaUser: null, // aqui é quando a carta foi confirmada
           cartaSelecionadaCasa: null,
           mensagem: null,
+          acabou: false,
+          imagem: null, 
         }
       }
 
@@ -137,7 +146,10 @@
           mensagem: null
         });
       }, 3000);
-  }
+      setTimeout(() => {
+        this.verificaVitoria();
+      }, 3000);
+    }
 
   verificaRodada(cartaUser,cartaCasa){
     let mensagem;
@@ -286,6 +298,50 @@
     }
   }
 
+  verificaVitoria(){
+    if(this.state.pontosCasa.fogo >= 1 && this.state.pontosCasa.agua >= 1 && this.state.pontosCasa.neve >= 1){
+      this.setState({imagem: imagens[3], acabou: true})
+    }
+    else if(this.state.pontosCasa.fogo == 3){
+      this.setState({imagem: imagens[2], acabou: true})
+    }
+    else if(this.state.pontosCasa.agua == 3){
+      this.setState({imagem: imagens[0], acabou: true})
+    }
+    else if(this.state.pontosCasa.neve == 3){
+      this.setState({imagem: imagens[1], acabou: true})
+    }
+    else if(this.state.pontosUser.fogo == 3 || this.state.pontosUser.agua == 3 || this.state.pontosUser.neve == 3 || 
+            (this.state.pontosUser.fogo >= 1 && this.state.pontosUser.agua >= 1 && this.state.pontosUser.neve >= 1)){
+      this.setState({imagem: imagens[4], acabou: true})
+    }
+  }
+
+  jogarNovamente(){
+    this.setState({
+          cartaIndex: null,
+          cartaEscolhidaUser: null, 
+          deckUser: this.criarDeck(),
+          deckCasa: this.criarDeck(),
+          pontosUser:{
+            agua: 0,
+            fogo: 0,
+            neve: 0,
+          },
+          pontosCasa:{
+            agua: 0,
+            fogo: 0,
+            neve: 0,
+          },
+          permissao: true,
+          cartaSelecionadaUser: null,
+          cartaSelecionadaCasa: null,
+          mensagem: null,
+          acabou: false,
+          imagem: null, 
+    })
+  }
+
   atualizarCartaUser(index){
     const novoDeck = [...this.state.deckUser]
 
@@ -427,24 +483,26 @@
 
     render() {
       return(
-          <ImageBackground source={fundo} style={estilos.tudo}>
-            <View style={estilos.deckUserinteiro}>
-              {this.state.deckUser.map((c, index) => 
-                this.carta({ 
-                  tipo: c.tipo, 
-                  nivel: c.nivel, 
-                  imagem: c.imagem,
-                  index, // pra saber qual carta foi selecionada e mudar a cor
-                  onPress: () => this.selecionarCarta(index)
-                })
-              )}
-            </View>
-            
-            <TouchableOpacity style={estilos.botao} activeOpacity={0.8} onPress={() => this.jogar()}>
-              <FontAwesome style={[estilos.mao,this.state.cartaIndex !== null && { backgroundColor: "#3d8537" }]} 
-                name="hand-stop-o" size={58} color="black" />
-            </TouchableOpacity>
 
+          <ImageBackground source={fundo} style={estilos.tudo}>
+            {!this.state.acabou && (
+              <View style={estilos.deckUserinteiro}>
+                {this.state.deckUser.map((c, index) => 
+                  this.carta({ 
+                    tipo: c.tipo, 
+                    nivel: c.nivel, 
+                    imagem: c.imagem,
+                    index, // pra saber qual carta foi selecionada e mudar a cor
+                    onPress: () => this.selecionarCarta(index)
+                  })
+                )}
+                <TouchableOpacity style={estilos.botao} activeOpacity={0.8} onPress={() => this.jogar()}>
+                <FontAwesome style={[estilos.mao,this.state.cartaIndex !== null && { backgroundColor: "#3d8537" }]} 
+                  name="hand-stop-o" size={58} color="black" />
+                </TouchableOpacity>
+              </View>
+            )}
+            
             <View style={estilos.placar}>
               <View style={[estilos.placarColuna, { marginLeft: 13 }]}>
                 <Text style={estilos.placarPalavra}>Você</Text>
@@ -476,20 +534,33 @@
               </View>
             </View>
             
-           {this.state.cartaSelecionadaUser && this.state.cartaSelecionadaCasa && (
-          <View style={estilos.centro}>
-            {this.renderCartaGrande(this.state.cartaSelecionadaUser)}
-            {this.renderCartaGrande(this.state.cartaSelecionadaCasa)}
-            {this.state.mensagem && (
-              <View style={estilos.minibox}> 
-                {this.state.mensagem}
-              </View>
-            )}
-          </View>
-        )}
+            
+          {this.state.cartaSelecionadaUser && this.state.cartaSelecionadaCasa && (
+            <View style={estilos.centro}>
+              {this.renderCartaGrande(this.state.cartaSelecionadaUser)}
+              {this.renderCartaGrande(this.state.cartaSelecionadaCasa)}
+              {this.state.mensagem && (
+                <View style={estilos.minibox}> 
+                  {this.state.mensagem}
+                </View>
+              )}
+            </View>
+          )}
 
-          <View style={estilos.linha}/>
-        </ImageBackground>
+        {this.state.acabou && (
+          <ImageBackground source={this.state.imagem} style={estilos.boxFinal} imageStyle={estilos.conteudoInterno}>
+              <TouchableOpacity style={estilos.botao3} onPress={() =>this.jogarNovamente()} activeOpacity={0.9}>
+                <Text style={estilos.botaoTexto}>Jogar novamente</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={estilos.botao4} onPress={() =>this.props.navigation.navigate('Home')} activeOpacity={0.9}>
+                <Text style={estilos.botaoTexto}>Menu Principal</Text>
+              </TouchableOpacity>
+          </ImageBackground>
+        )}  
+
+            <View style={estilos.linha}/>
+          </ImageBackground>
+          
       );
     }
   }
@@ -664,7 +735,7 @@
   minibox:{
     position: "absolute",
     backgroundColor: "white",
-    top: "145%",
+    top: "125%",
     height: 50,
     width: "50%",
     borderRadius: 25,
@@ -678,5 +749,56 @@
     fontWeight: "bold",
     marginLeft: 5,
     marginBottom: 2
-  }
+  },
+  boxFinal: {
+    position: "absolute",
+    height: 470,
+    width: "100%",
+    top: "23%",
+    left: "1%",
+    backgroundColor: "black",
+  },
+  conteudoInterno: {
+    flex: 1,
+    backgroundColor: "white",
+    borderWidth: 3
+  },
+  botao3:{
+    borderRadius: 15,
+    width: "40%",
+    height: 50,
+    alignItems: "center",
+    justifyContent:"center",
+    backgroundColor: "#3d8537",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5,
+    borderWidth:2,
+    position: "absolute",
+    left: "5%",
+    top: "103%"
+  },
+  botaoTexto:{
+    fontWeight: "bold",
+    fontFamily: "sans-serif",
+    fontSize:16,
+    color: "black"
+  },
+   botao4:{
+    borderRadius: 15,
+    width: "40%",
+    height: 50,
+    alignItems: "center",
+    justifyContent:"center",
+    backgroundColor: "#853737",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5, 
+    elevation: 5,
+    borderWidth:2,
+    position: "absolute",
+    left: "50%",
+    top: "103%"
+  },
 })

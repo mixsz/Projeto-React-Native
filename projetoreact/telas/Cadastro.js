@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
+import { Text,View,TextInput,StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -45,7 +45,7 @@ export default class Cadastro extends React.Component {
             else{
               const perfil = {
                 usuario: this.state.user,
-                senha: this.state.password, // dps eu coloco ponto ou moeda sla oq vou usar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                senha: this.state.password,
               };
               await AsyncStorage.setItem(this.state.user, JSON.stringify(perfil));
               this.setState({mensagem: "", cor: "green",criado: true})

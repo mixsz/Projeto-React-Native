@@ -1,16 +1,16 @@
 import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight } from 'react-native';
+import { Text,View,StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default class Home extends React.Component {  
-  constructor(props) {
+  constructor(props){
     super(props);
     this.state = {
        perfil: this.props.route.params.perfil            
     };
   }
-  // nome -> this.state.perfil.usuario !!!!!!!!!!!!!!!!!! VOCÊ TEM QUE ARRUMAR NA TABNAV DEPOIS, N ESQUEÇA!!!!!!!!!!!!!!
+ 
   render() {
     return (
       <View style={estilos.tudo}>

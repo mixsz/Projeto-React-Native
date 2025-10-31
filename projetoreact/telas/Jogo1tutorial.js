@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text,View,Button,TextInput,StyleSheet, TouchableOpacity,TouchableHighlight,Image } from 'react-native';
+import { Text,View,StyleSheet, TouchableOpacity,Image } from 'react-native';
 
 export default class Jogo1tutorial extends React.Component {
     render() {

@@ -7,7 +7,7 @@ export default class Ranking extends React.Component {
     return (
       <View>
          <Card>
-          <Card.Title title="Ranking"  />
+          <Card.Title title="Ranking"  /> // n vai ser rank!!!
           <Card.Content>
           </Card.Content>
         </Card>
