@@ -32,14 +32,14 @@ export default class TabNav extends React.Component {
             tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="home" color={color} size={size}/>)
           }}
         />
-        <Tab.Screen name="Ranking" component={Ranking} initialParams={{ perfil: this.props.route.params.perfil}}
-          options={{headerShown: false,
-            tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="account-details" color={color} size={size}/>)
-          }}
-        />
       </Tab.Navigator>
     )
   }
 }
 
+  // <Tab.Screen name="Ranking" component={Ranking} initialParams={{ perfil: this.props.route.params.perfil}}
+  //         options={{headerShown: false,
+  //           tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="account-details" color={color} size={size}/>)
+  //         }}
+  //       />
 
