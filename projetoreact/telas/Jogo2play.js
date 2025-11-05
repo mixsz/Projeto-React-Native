@@ -11,33 +11,33 @@
   const igual = <FontAwesome5 name="equals" size={25} color="black" />
   const cartas = {
     agua: {
-      1: require('../assets/Aprovado.png'),
-      2: require('../assets/cardduel.png'),
+      1: require('../assets/agua1.jpg'), //
+      2: require('../assets/agua2.jpg'), //
       3: require('../assets/desaprovado.png'),
-      4: require('../assets/fogao.jpg'),
+      4: require('../assets/fogo1.jpg'),
       5: require('../assets/logojogo1.png'),
       6: require('../assets/Aprovado.png'),
-      7: require('../assets/cardduel.png'),
-      8: require('../assets/logojogo1.png'),
-    },
+      7: require('../assets/agua1.jpg'),
+      8: require('../assets/agua2.jpg'), 
+    }, 
     fogo: {
-      1: require('../assets/Aprovado.png'),
-      2: require('../assets/cardduel.png'),
-      3: require('../assets/desaprovado.png'),
-      4: require('../assets/fogao.jpg'),
-      5: require('../assets/logojogo1.png'),
+      1: require('../assets/fogo1.jpg'), //
+      2: require('../assets/fogo2.jpg'), //
+      3: require('../assets/fogo3.jpg'), //
+      4: require('../assets/fogo3.jpg'), 
+      5: require('../assets/fogo1.jpg'),
       6: require('../assets/Aprovado.png'),
       7: require('../assets/cardduel.png'),
       8: require('../assets/logojogo1.png'),
     },
     neve: {
-      1: require('../assets/Aprovado.png'),
-      2: require('../assets/cardduel.png'),
-      3: require('../assets/desaprovado.png'),
-      4: require('../assets/fogao.jpg'),
+      1: require('../assets/neve1.jpg'), //
+      2: require('../assets/neve2.jpg'), //
+      3: require('../assets/neve3.jpeg'), //
+      4: require('../assets/neve4.jpg'), //
       5: require('../assets/logojogo1.png'),
-      6: require('../assets/Aprovado.png'),
-      7: require('../assets/cardduel.png'),
+      6: require('../assets/fogo3.jpg'),
+      7: require('../assets/fogo3.jpg'),
       8: require('../assets/logojogo1.png'),
     }
   };
@@ -89,7 +89,6 @@
 
     criarDeck(){
       const deckUser = [];
-
       while(deckUser.length < 5){
         const carta = this.criarCarta();
         const jaExiste = deckUser.some(c => c.tipo === carta.tipo && c.nivel === carta.nivel); // verifica se a carta ja ta no deckUser p n repetir..

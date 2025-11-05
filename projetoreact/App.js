@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 
 import Nav from './navs/nav'
+import Jogo2play from './telas/Jogo2play'
 
 export default class App extends React.Component {
   render() {
