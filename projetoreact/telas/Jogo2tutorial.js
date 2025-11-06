@@ -13,19 +13,18 @@ export default class Jogo2tutorial extends React.Component {
             <View style={estilos.texto}>
               <Text style={estilos.titulo}>Como jogar?</Text>
               <Text style={estilos.palavra}>
-                Card Duel é um duelo de cartas, onde você enfrenta a famosa casa em uma batalha estratégica.{"\n\n"}
-                O jogo começa com a distribuição de 5 cartas aleatórias para ambos os lados. 
-                A cada rodada, você e a casa escolhem uma carta para duelar.{"\n\n"}
-                As cartas são divididas em 3 atributos:{"\n"}
-                Nome da carta, elemento e nível de poder.{"\n\n"}
-                Cada elemento vence o outro, sendo assim:{"\n"}
-                Água <Ionicons name="water-sharp" size={16} color="#00c2ff" /> → Fogo  <Fontisto name="fire" size={16} color="orange" />{"\n"}
-                Fogo  <Fontisto name="fire" size={16} color="orange" /> → Neve  <FontAwesome name="snowflake-o" size={16} color="white" />{"\n"}
-                Neve  <FontAwesome name="snowflake-o" size={16} color="white" /> → Água <Ionicons name="water-sharp" size={16} color="#00c2ff" />{"\n\n"}
-                Se o elemento de uma carta for igual ao outro, o nível de poder é utilizado para determinar o vencedor da rodada.{"\n\n"}
-                Ao início de uma nova rodada, você e a casa recebem uma nova carta, mantendo sempre um deck de 5 cartas.{"\n\n"}
-                Seu objetivo é vencer o duelo, e você possui 2 maneiras de vencer: 
-                fazendo 3 PONTOS com o mesmo elemento ou fazendo no mínimo 1 PONTO com cada elemento.
+                 Card Duel é um duelo de cartas, onde você enfrenta o famoso Sensei em uma batalha estratégica.{"\n\n"}
+                 O jogo começa com a distribuição de 5 cartas aleatórias para ambos os lados. 
+                 A cada rodada, você e a casa escolhem uma carta para duelar.{"\n\n"}
+                 As cartas são divididas em 2 atributos:{"\n"}
+                 Elemento e nível de poder.{"\n\n"}
+                 Cada elemento vence o outro, sendo assim:{"\n"}
+                 Água <Ionicons name="water-sharp" size={16} color="#00c2ff" /> → Fogo  <Fontisto name="fire" size={16} color="orange" />{"\n"}
+                 Fogo  <Fontisto name="fire" size={16} color="orange" /> → Neve  <FontAwesome name="snowflake-o" size={16} color="white" />{"\n"}
+                 Neve  <FontAwesome name="snowflake-o" size={16} color="white" /> → Água <Ionicons name="water-sharp" size={16} color="#00c2ff" />{"\n\n"}
+                 Se o elemento de uma carta for igual ao outro, o nível de poder é utilizado para determinar o vencedor da rodada.{"\n\n"}
+                 Seu objetivo é vencer este duelo, e você possui 2 maneiras de vencer:{"\n\n"}
+                 Fazendo 3 PONTOS com o mesmo elemento ou fazendo no mínimo 1 PONTO com cada elemento.
               </Text>
             </View>
              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2')} activeOpacity={0.6}>

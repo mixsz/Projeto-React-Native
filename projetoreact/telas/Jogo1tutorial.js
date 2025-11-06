@@ -16,7 +16,7 @@ export default class Jogo1tutorial extends React.Component {
               <Text style={estilos.palavra}>• Multiplicação (×)</Text>
               <Text style={estilos.palavra}>• Divisão (÷)</Text>
               <Text> </Text>
-              <Text style={estilos.palavra}>Dentro de 10 rodadas, os números serão exibidos na tela, e você deverá completar o sinal correto para realizar a operação, adivinhe o máximo de sinais que conseguir!</Text>
+              <Text style={estilos.palavra}>Dentro de 10 rodadas, os números serão exibidos na tela, e você deverá completar o sinal que falta corretamente para realizar a operação, adivinhe o máximo de sinais que conseguir!</Text>
               <Text> </Text>
               <Text style={estilos.palavra}>Cada acerto vale 1 ponto, e a média necessária para passar é 6.</Text>
               <Text> </Text>

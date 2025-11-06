@@ -5,40 +5,41 @@
   import FontAwesome from '@expo/vector-icons/FontAwesome';
   import fundo from '../assets/dojo.webp'; // sua imagem
   import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+  import { Audio } from 'expo-av';
 
   const setaDireita = <FontAwesome name="long-arrow-right" size={28} color="black" />
   const setaEsquerda = <FontAwesome name="long-arrow-left" size={28} color="black" />
   const igual = <FontAwesome5 name="equals" size={25} color="black" />
   const cartas = {
     agua: {
-      1: require('../assets/agua1.jpg'), //
-      2: require('../assets/agua2.jpg'), //
-      3: require('../assets/desaprovado.png'),
-      4: require('../assets/fogo1.jpg'),
-      5: require('../assets/logojogo1.png'),
-      6: require('../assets/Aprovado.png'),
-      7: require('../assets/agua1.jpg'),
-      8: require('../assets/agua2.jpg'), 
+      1: require('../assets/agua7.jpg'), // 
+      2: require('../assets/agua6.jpg'), //
+      3: require('../assets/agua3.jpg'), //
+      4: require('../assets/agua4.jpg'), // 
+      5: require('../assets/agua5.jpg'), //
+      6: require('../assets/agua8.jpg'), //
+      7: require('../assets/agua2.jpg'), //
+      8: require('../assets/agua1.jpg'), //
     }, 
     fogo: {
       1: require('../assets/fogo1.jpg'), //
       2: require('../assets/fogo2.jpg'), //
       3: require('../assets/fogo3.jpg'), //
-      4: require('../assets/fogo3.jpg'), 
-      5: require('../assets/fogo1.jpg'),
-      6: require('../assets/Aprovado.png'),
-      7: require('../assets/cardduel.png'),
-      8: require('../assets/logojogo1.png'),
+      4: require('../assets/fogo4.jpg'), //
+      5: require('../assets/fogo5.jpg'), //
+      6: require('../assets/fogo6.jpg'), //
+      7: require('../assets/fogo7.jpg'), //
+      8: require('../assets/fogo8.jpg'), //
     },
     neve: {
       1: require('../assets/neve1.jpg'), //
-      2: require('../assets/neve2.jpg'), //
-      3: require('../assets/neve3.jpeg'), //
+      2: require('../assets/neve2.jpg'), // 
+      3: require('../assets/neve3.jpg'), // 
       4: require('../assets/neve4.jpg'), //
-      5: require('../assets/logojogo1.png'),
-      6: require('../assets/fogo3.jpg'),
-      7: require('../assets/fogo3.jpg'),
-      8: require('../assets/logojogo1.png'),
+      5: require('../assets/neve5.jpg'), // 
+      6: require('../assets/neve6.jpg'), //
+      7: require('../assets/neve7.jpg'), //
+      8: require('../assets/neve8.jpg'), //
     }
   };
   const imagens = [
@@ -62,7 +63,7 @@
             fogo: 0,
             neve: 0,
           },
-          pontosCasa:{
+          pontosCasa:{ 
             agua: 0,
             fogo: 0,
             neve: 0,
@@ -158,6 +159,7 @@
       neve: <FontAwesome name="snowflake-o" size={27} color="#58f5ff" />,
     };
     if(cartaUser.tipo === "fogo" && cartaCasa.tipo === "neve"){
+      this.somFogo()
       this.setState(prevState =>({
         pontosUser:{ 
           ...prevState.pontosUser,
@@ -175,6 +177,7 @@
     }
 
     else if(cartaUser.tipo === "agua" && cartaCasa.tipo === "fogo"){
+      this.somAgua()
       this.setState(prevState =>({
         pontosUser:{ 
           ...prevState.pontosUser, 
@@ -188,10 +191,11 @@
           </View>
        );
        this.setState({ mensagem })
-       return 1
+       return 1 
     }
 
     else if(cartaUser.tipo === "neve" && cartaCasa.tipo === "agua"){
+      this.somNeve()
       this.setState(prevState =>({
         pontosUser:{ 
           ...prevState.pontosUser, 
@@ -209,6 +213,16 @@
     }
     
     else if(cartaUser.tipo === cartaCasa.tipo){
+      if(cartaUser.tipo == "agua"){
+       this.somAgua()
+      }
+      else if(cartaUser.tipo == "neve"){
+        this.somNeve()
+      }
+      else{
+        this.somFogo()
+      }
+
       if(cartaUser.nivel > cartaCasa.nivel){
         this.setState(prevState => ({
           pontosUser:{
@@ -235,6 +249,7 @@
         );
 
        this.setState({ mensagem })
+      
         return 1
       }
       else if(cartaUser.nivel < cartaCasa.nivel){
@@ -279,6 +294,16 @@
     }
 
     else{
+      if(cartaCasa.tipo == "agua"){
+       this.somAgua()
+      }
+      else if(cartaCasa.tipo == "neve"){
+        this.somNeve()
+      }
+      else{
+        this.somFogo()
+      }
+
       this.setState(prevState =>({
         pontosCasa:{
           ...prevState.pontosCasa,
@@ -299,22 +324,179 @@
 
   verificaVitoria(){
     if(this.state.pontosCasa.fogo >= 1 && this.state.pontosCasa.agua >= 1 && this.state.pontosCasa.neve >= 1){
+      this.somDerrota()
       this.setState({imagem: imagens[3], acabou: true})
     }
     else if(this.state.pontosCasa.fogo == 3){
+      this.somDerrota()
       this.setState({imagem: imagens[2], acabou: true})
     }
     else if(this.state.pontosCasa.agua == 3){
+      this.somDerrota()
       this.setState({imagem: imagens[0], acabou: true})
     }
     else if(this.state.pontosCasa.neve == 3){
+      this.somDerrota()
       this.setState({imagem: imagens[1], acabou: true})
     }
     else if(this.state.pontosUser.fogo == 3 || this.state.pontosUser.agua == 3 || this.state.pontosUser.neve == 3 || 
             (this.state.pontosUser.fogo >= 1 && this.state.pontosUser.agua >= 1 && this.state.pontosUser.neve >= 1)){
       this.setState({imagem: imagens[4], acabou: true})
+      this.somVitoria()
+      this.somVitoria2()
     }
   }
+
+  async somDerrota(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/perdeu2.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+  }
+
+  async somVitoria(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/ganhou2.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+  }
+
+  async somVitoria2(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/ganhou23.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+  }
+
+  async somAgua(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/somAgua.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+  }
+
+  async somFogo(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/somFogo.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+  }
+
+  async somNeve(){
+
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
+      this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(
+        require('../assets/somNeve.mp3')
+      );
+      await sound.playAsync()
+      this.soundAtual = sound;
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        this.soundAtual = null;
+        }
+      });
+      
+    setTimeout(async () => { // pra parar o audio dps de 3s (ele dura 8s)
+      try{
+        await sound.stopAsync()
+        await sound.unloadAsync()
+        this.soundAtual = null;
+      }
+      catch (e) {
+        console.log("audioNeve")
+      }
+    }, 3000);
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync()
+        this.soundAtual = null
+      }
+    });
+  }
+
 
   jogarNovamente(){
     this.setState({
@@ -518,7 +700,7 @@
                 </View>
               </View>
               <View style={[estilos.placarColuna, { marginLeft: -6}]}>
-                <Text style={estilos.placarPalavra}>Casa</Text>
+                <Text style={estilos.placarPalavra}>Sensei</Text>
                 <View style={estilos.placarElementos}>
                   {['fogo', 'agua', 'neve'].map(tipo => (
                     <View key={tipo} style={estilos.placarElementoColuna}>
