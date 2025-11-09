@@ -8,8 +8,8 @@
   - [1. Cadastro de Usuário](#1-cadastro-de-usuário)
   - [2. Login de Usuário](#2-login-de-usuário)
   - [3. Home](#3-home)
-  - [4. Menu do Jogo 1 — Operação Misteriosa](#4-menu-do-jogo-1--operação-misteriosa)
-  - [5. Menu do Jogo 1 — Operação Misteriosa](#5-menu-do-jogo-2--card-duel)
+  - [4. Menu do Jogo 1 - Operação Misteriosa](#4-menu-do-jogo-1--operação-misteriosa)
+  - [5. Menu do Jogo 2 - Card Duel](#5-menu-do-jogo-2--card-duel)
   - [6. Operação Misteriosa](#6-operação-misteriosa)
   - [7. Card Duel](#7-card-duel)
 - [Motivação](#motivação)
@@ -20,7 +20,7 @@ Inspirado em jogos mobiles, este app busca proporcionar uma experiência positiv
 
 ## Tecnologias Utilizadas
 * **React Native** - framework principal para desenvolvimento mobile
-* **Expo Snack** — ambiente online usado durante o desenvolvimento e testes rápidos do projeto.  
+* **Expo Snack** - ambiente online usado durante o desenvolvimento e testes rápidos do projeto.  
 * **Expo** - para facilitar o processo de execução e build
 * **React Navigation** - responsável pela navegação entre telas
 * **AsyncStorage** - armazenamento local dos dados do usuário
