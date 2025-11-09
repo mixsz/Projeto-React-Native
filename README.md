@@ -2,7 +2,7 @@
 
 ## Sumário
 - [Objetivo do Projeto](#objetivo-do-projeto)
-- [Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+- [Tecnologias Utilizadas](#️tecnologias-utilizadas)
 - [Estrutura do Sistema](#estrutura-do-sistema)
 - [Funcionalidades Principais](#funcionalidades-principais)
   - [1. Cadastro de Usuário](#1-cadastro-de-usuário)
