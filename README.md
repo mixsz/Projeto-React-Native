@@ -31,6 +31,7 @@ Inspirado em jogos mobiles, este app busca proporcionar uma experiência positiv
 Projeto-React-Native-main
 ├── 📂 assets/      # Contém imagens, ícones e áudios utilizados no app
 ├── 📂 navs/        # Responsável pela navegação entre as telas
+└── 📂 screenshots/ # Contém as imagens do aplicativo (p/ readme)
 ├── 📂 telas/       # Onde está localizado todos arquivos de telas do app (.js)
 ├── 📜 App.js       # Ponto de entrada principal do aplicativo
 ├── 📜 index.js     # Arquivo inicial que registra o App principal
