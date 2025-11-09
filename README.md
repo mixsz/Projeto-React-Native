@@ -9,8 +9,9 @@
   - [2. Login de Usuário](#2-login-de-usuário)
   - [3. Home](#3-home)
   - [4. Menu do Jogo 1 — Operação Misteriosa](#4-menu-do-jogo-1--operação-misteriosa)
-  - [5. Operação Misteriosa](#5-operação-misteriosa)
-  - [6. Card Duel](#6-card-duel)
+  - [5. Menu do Jogo 1 — Operação Misteriosa](#5-menu-do-jogo-2--card-duel)
+  - [6. Operação Misteriosa](#6-operação-misteriosa)
+  - [7. Card Duel](#7-card-duel)
 - [Motivação](#motivação)
 - [Algumas Telas](#algumas-telas)
 
@@ -68,16 +69,16 @@ Nesta tela, o usuário encontra três botões principais:
 - **Tutorial** — leva para a tela que exibe as instruções e regras do jogo  
 - **Voltar** — retorna ao menu principal (Home)
 
-### 4. Menu do Jogo 2 — *Card Duel*  
+### 5. Menu do Jogo 2 — *Card Duel*  
 Nesta tela, o usuário encontra três botões principais:
 
 - **Jogar** — redireciona para a tela de gameplay, onde o usuário pode jogar *Card Duel*  
 - **Tutorial** — leva para a tela que exibe as instruções e regras do jogo  
 - **Voltar** — retorna ao menu principal (Home)
 
-### 5. Operação Misteriosa  
+### 6. Operação Misteriosa  
 
-   * ### 5.1 **Como funciona?**  
+   * ### 6.1 **Como funciona?**  
    *Operação Misteriosa* é um jogo de matemática em que o usuário deve adivinhar qual operação (`+`, `-`, `*` ou `/`) está faltando na expressão exibida na tela.  
    
    * O jogo possui **10 rodadas**.  
@@ -88,7 +89,7 @@ Nesta tela, o usuário encontra três botões principais:
    
    O jogo estimula o raciocínio e a prática de operações básicas de forma desafiadora.
    
-   * ### 5.2 **Como foi desenvolvido?**
+   * ### 6.2 **Como foi desenvolvido?**
      Resumo passo a passo:
    
        **1. Sorteio da operação:** um número aleatório de `1` a `4` é sorteado; cada número mapeia para uma operação (`+`, `-`, `*`, `/`).
@@ -112,9 +113,9 @@ Nesta tela, o usuário encontra três botões principais:
      * Exibe uma imagem indicando aprovação/reprovação e um botão para **Jogar Novamente**.  
      * O botão **Voltar** permanece fixo no canto superior esquerdo, retornando à Home.
 
-### 6. Card Duel
+### 7. Card Duel
 
-   * ### 6.1 **Como funciona?**
+   * ### 7.1 **Como funciona?**
      Inspirado no clássico jogo de cartas do *Club Penguin*, **Card Jitsu**, o *Card Duel* é um jogo de estratégia onde o usuário deve escolher uma carta de seu deck para enfrentar uma carta aleatória do deck do Sensei.
 
      - Cada carta possui:
@@ -146,7 +147,7 @@ Nesta tela, o usuário encontra três botões principais:
           - Fazer **3 pontos com cartas do mesmo elemento**
           - Fazer **pelo menos 1 ponto de cada elemento** (Água, Fogo e Neve).
 
-  #### 6.2 **Como foi desenvolvido?**
+  #### 7.2 **Como foi desenvolvido?**
 
   Resumo passo a passo:
   
