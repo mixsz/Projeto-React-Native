@@ -1,4 +1,4 @@
-# Projeto React Native - CCP150
+# Projeto React Native - Disciplina CCP150
 
 ## Sumário
 - [Objetivo do Projeto](#objetivo-do-projeto)
