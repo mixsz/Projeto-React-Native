@@ -2,7 +2,8 @@
 
 ## Sumário
 - [Objetivo do Projeto](#objetivo-do-projeto)
-- [Tecnologias Utilizadas](#️tecnologias-utilizadas)
+- [Como Rodar](#como-rodar)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Estrutura do Sistema](#estrutura-do-sistema)
 - [Funcionalidades Principais](#funcionalidades-principais)
   - [1. Cadastro de Usuário](#1-cadastro-de-usuário)
@@ -17,6 +18,20 @@
 
 ## Objetivo do Projeto
 Inspirado em jogos mobiles, este app busca proporcionar uma experiência positiva através da criação de 2 jogos casuais e interativos em um único ambiente + um sistema de contas, permitindo cadastro e login de um usuário.
+
+## Como Rodar
+0. É necessário ter instalado **Node.js** na sua máquina
+1. Baixe o app mobile **Expo Go** no celular
+2. Clone o repositório
+3. No terminal, rode:
+```bash
+npm install
+ ```
+5. Em seguida:
+```bash
+npx expo start
+```
+6. Escaneie o QR CODE pelo celular usando o app Expo Go
 
 ## Tecnologias Utilizadas
 * **React Native** - framework principal para desenvolvimento mobile
