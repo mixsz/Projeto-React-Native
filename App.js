@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 
 
 import Nav from './navs/nav'
-import Jogo2play from './telas/Jogo2play'
 
 export default class App extends React.Component {
   render() {
@@ -16,7 +15,7 @@ export default class App extends React.Component {
 }
 
 /**
- * sites q preciso:
+ * sites:
  * 
  * https://icons.expo.fyi/Index
  * https://www.remove.bg/pt-br/upload
@@ -24,6 +23,3 @@ export default class App extends React.Component {
  * 
  * 
  */
-
-
-// imagens nas cartas -> sons no jogo2 -> nova tela (?) -> readme
