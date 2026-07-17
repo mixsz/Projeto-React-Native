@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import Login from '../telas/Login';
-import Cadastro from '../telas/Cadastro';
+import Login from '../screens/Login';
+import Cadastro from '../screens/Cadastro';
 import TabNav from '../navs/tabnav'
 const Stack = createStackNavigator();
 

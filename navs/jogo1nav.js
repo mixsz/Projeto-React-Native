@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import Jogo1 from '../telas/Jogo1';
-import Jogo1tutorial from '../telas/Jogo1tutorial'
-import Jogo1play from '../telas/Jogo1play'
+import Jogo1 from '../screens/Jogo1';
+import Jogo1tutorial from '../screens/Jogo1tutorial'
+import Jogo1play from '../screens/Jogo1play'
 const Stack = createStackNavigator();
 
 export default function Jogo1nav({ route }) {

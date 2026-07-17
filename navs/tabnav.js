@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Homenav from '../navs/homenav';
-import Ranking from '../telas/Ranking';
+import Ranking from '../screens/Ranking';
 
 
 const Tab = createBottomTabNavigator();

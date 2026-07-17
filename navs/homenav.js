@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../telas/Home';
+import Home from '../screens/Home';
 import Jogo1nav from '../navs/jogo1nav'
 import Jogo2nav from '../navs/jogo2nav'
 
