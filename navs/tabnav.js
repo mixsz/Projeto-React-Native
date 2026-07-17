@@ -2,8 +2,6 @@ import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Homenav from '../navs/homenav';
-import Ranking from '../screens/Ranking';
-
 
 const Tab = createBottomTabNavigator();
 
@@ -36,10 +34,3 @@ export default class TabNav extends React.Component {
     )
   }
 }
-
-  // <Tab.Screen name="Ranking" component={Ranking} initialParams={{ perfil: this.props.route.params.perfil}}
-  //         options={{headerShown: false,
-  //           tabBarIcon: ({color, size}) => (<MaterialCommunityIcons name="account-details" color={color} size={size}/>)
-  //         }}
-  //       />
-
