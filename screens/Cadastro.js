@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { criarUsuario } from '../services/usuarioService';
@@ -31,7 +31,15 @@ export default class Cadastro extends React.Component {
 
     try {
       await criarUsuario(this.state.user, this.state.password);
-      this.setState({ mensagem: '', cor: cores.sucesso, criado: true });
+      Keyboard.dismiss();
+      this.setState({
+        user: '',
+        password: '',
+        confirmarSenha: '',
+        mensagem: '',
+        cor: cores.sucesso,
+        criado: true,
+      });
       alert('Conta cadastrada com sucesso!');
     } catch (erro) {
       this.setState({ mensagem: erro.message, cor: cores.erro });
