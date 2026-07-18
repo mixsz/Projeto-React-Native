@@ -1,4 +1,4 @@
-  import React from 'react';
+import React from 'react';
   import { Text,View,StyleSheet, TouchableOpacity,ImageBackground } from 'react-native';
   import Ionicons from '@expo/vector-icons/Ionicons';
   import Fontisto from '@expo/vector-icons/Fontisto';
@@ -10,6 +10,20 @@
   const setaDireita = <FontAwesome name="long-arrow-right" size={28} color="black" />
   const setaEsquerda = <FontAwesome name="long-arrow-left" size={28} color="black" />
   const igual = <FontAwesome5 name="equals" size={25} color="black" />
+
+  // fogo vence neve, agua vence fogo, neve vence agua
+  const VENCE = { fogo: 'neve', agua: 'fogo', neve: 'agua' };
+
+  // cores compartilhadas entre a carta pequena (deck) e a carta grande (escolhida)
+  const CORES_BORDA = { fogo: 'yellow', agua: '#183ccb', neve: '#85f8ff' };
+  const CORES_NIVEL_MAX = { fogo: '#6a2020', agua: '#272972', neve: '#358f8f' };
+
+  const ICONES_RESULTADO = {
+    fogo: <Fontisto name="fire" size={28} color="orange" />,
+    agua: <Ionicons name="water-sharp" size={28} color="#00c2ff" />,
+    neve: <FontAwesome name="snowflake-o" size={27} color="#58f5ff" />,
+  };
+
   const cartas = {
     agua: {
       1: require('../assets/agua7.jpg'), // 
@@ -135,8 +149,8 @@
       }, 1500);
 
       setTimeout(() => {
-        this.atualizarCartaUser(this.state.cartaIndex);
-        this.atualizarCartaCasa(indexCasa);
+        this.atualizarCarta('deckUser', this.state.cartaIndex);
+        this.atualizarCarta('deckCasa', indexCasa);
         this.setState({
           cartaSelecionadaUser: null,
           cartaSelecionadaCasa: null,
@@ -151,352 +165,154 @@
       }, 3000);
     }
 
-  verificaRodada(cartaUser,cartaCasa){
-    let mensagem;
-    const icones = {
-      fogo: <Fontisto name="fire" size={28} color="orange" />,
-      agua: <Ionicons name="water-sharp" size={28} color="#00c2ff" />,
-      neve: <FontAwesome name="snowflake-o" size={27} color="#58f5ff" />,
-    };
-    if(cartaUser.tipo === "fogo" && cartaCasa.tipo === "neve"){
-      this.somFogo()
-      this.setState(prevState =>({
-        pontosUser:{ 
-          ...prevState.pontosUser,
-          fogo: prevState.pontosUser.fogo + 1,
-       }}))
-        mensagem=(
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            {icones[cartaUser.tipo]}
-            {setaDireita}
-            {icones[cartaCasa.tipo]}
-          </View>
-       );
-       this.setState({ mensagem })
-       return 1
-    }
+  // soma 1 ponto num elemento dentro de pontosUser ou pontosCasa
+  incrementarPontos(chave, tipo){
+    this.setState(prevState => ({
+      [chave]: {
+        ...prevState[chave],
+        [tipo]: prevState[chave][tipo] + 1,
+      }
+    }));
+  }
 
-    else if(cartaUser.tipo === "agua" && cartaCasa.tipo === "fogo"){
-      this.somAgua()
-      this.setState(prevState =>({
-        pontosUser:{ 
-          ...prevState.pontosUser, 
-          agua: prevState.pontosUser.agua + 1
-       }}))
-      mensagem=(
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            {icones[cartaUser.tipo]}
-            {setaDireita}
-            {icones[cartaCasa.tipo]}
-          </View>
-       );
-       this.setState({ mensagem })
-       return 1 
-    }
+  // mensagem simples: ícone -> seta -> ícone (usada em vitoria por tipo, empate e derrota)
+  criarMensagemSimples(tipoUser, tipoCasa, seta){
+    return (
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
+        {ICONES_RESULTADO[tipoUser]}
+        {seta}
+        {ICONES_RESULTADO[tipoCasa]}
+      </View>
+    );
+  }
 
-    else if(cartaUser.tipo === "neve" && cartaCasa.tipo === "agua"){
-      this.somNeve()
-      this.setState(prevState =>({
-        pontosUser:{ 
-          ...prevState.pontosUser, 
-          neve: prevState.pontosUser.neve + 1
-       }}))
-       mensagem=(
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            {icones[cartaUser.tipo]}
-            {setaDireita}
-            {icones[cartaCasa.tipo]}
-          </View>
-       );
-       this.setState({ mensagem })
-       return 1
+  // mensagem com nivel: usada quando as duas cartas são do mesmo elemento
+  criarMensagemComNivel(cartaUser, cartaCasa, seta){
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {ICONES_RESULTADO[cartaUser.tipo]}
+          <Text style={estilos.mensagemEstilo}>({cartaUser.nivel})</Text>
+        </View>
+        <Text style={{ marginHorizontal: 5 }}>{seta}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {ICONES_RESULTADO[cartaCasa.tipo]}
+          <Text style={estilos.mensagemEstilo}>({cartaCasa.nivel})</Text>
+        </View>
+      </View>
+    );
+  }
+
+  verificaRodada(cartaUser, cartaCasa){
+    let mensagem, resultado;
+
+    if(VENCE[cartaUser.tipo] === cartaCasa.tipo){
+      // usuario venceu por vantagem de elemento
+      this.tocarSomElemento(cartaUser.tipo);
+      this.incrementarPontos('pontosUser', cartaUser.tipo);
+      mensagem = this.criarMensagemSimples(cartaUser.tipo, cartaCasa.tipo, setaDireita);
+      resultado = 1;
     }
-    
     else if(cartaUser.tipo === cartaCasa.tipo){
-      if(cartaUser.tipo == "agua"){
-       this.somAgua()
-      }
-      else if(cartaUser.tipo == "neve"){
-        this.somNeve()
-      }
-      else{
-        this.somFogo()
-      }
-
+      // mesmo elemento: decide por nível
+      this.tocarSomElemento(cartaUser.tipo);
       if(cartaUser.nivel > cartaCasa.nivel){
-        this.setState(prevState => ({
-          pontosUser:{
-            ...prevState.pontosUser,
-            [cartaUser.tipo]: prevState.pontosUser[cartaUser.tipo] + 1
-          }
-        }))
-        mensagem = (
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {icones[cartaUser.tipo]}
-              <Text style={estilos.mensagemEstilo}>
-                ({cartaUser.nivel})
-              </Text>
-            </View>
-            <Text style={{ marginHorizontal: 5 }}>{setaDireita}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {icones[cartaCasa.tipo]}
-              <Text  style={estilos.mensagemEstilo}>
-                ({cartaCasa.nivel})
-              </Text>
-            </View>
-          </View>
-        );
-
-       this.setState({ mensagem })
-      
-        return 1
+        this.incrementarPontos('pontosUser', cartaUser.tipo);
+        mensagem = this.criarMensagemComNivel(cartaUser, cartaCasa, setaDireita);
+        resultado = 1;
       }
       else if(cartaUser.nivel < cartaCasa.nivel){
-        this.setState(prevState =>({
-          pontosCasa:{
-            ...prevState.pontosCasa,
-            [cartaCasa.tipo]: prevState.pontosCasa[cartaCasa.tipo] + 1
-          }
-        }))
-        mensagem = (
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {icones[cartaUser.tipo]}
-              <Text  style={estilos.mensagemEstilo}>
-                ({cartaUser.nivel})
-              </Text>
-            </View>
-            <Text style={{ marginHorizontal: 5 }}>{setaDireita}</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {icones[cartaCasa.tipo]}
-              <Text  style={estilos.mensagemEstilo}>
-                ({cartaCasa.nivel})
-              </Text> 
-            </View>
-          </View>
-        );
-
-       this.setState({ mensagem })
-        return 0
-      }
-      else{ // empate
-       mensagem=(
-          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-            {icones[cartaUser.tipo]}
-            {igual}
-            {icones[cartaCasa.tipo]}
-          </View>
-       );
-       this.setState({ mensagem })
-        return 2
-      }
-    }
-
-    else{
-      if(cartaCasa.tipo == "agua"){
-       this.somAgua()
-      }
-      else if(cartaCasa.tipo == "neve"){
-        this.somNeve()
+        this.incrementarPontos('pontosCasa', cartaCasa.tipo);
+        mensagem = this.criarMensagemComNivel(cartaUser, cartaCasa, setaEsquerda);
+        resultado = 0;
       }
       else{
-        this.somFogo()
+        // empate: nenhum ponto
+        mensagem = this.criarMensagemSimples(cartaUser.tipo, cartaCasa.tipo, igual);
+        resultado = 2;
       }
-
-      this.setState(prevState =>({
-        pontosCasa:{
-          ...prevState.pontosCasa,
-          [cartaCasa.tipo]: prevState.pontosCasa[cartaCasa.tipo] + 1
-        }
-      }))
-      mensagem=(
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}}>
-          {icones[cartaUser.tipo]}
-          {setaEsquerda}
-          {icones[cartaCasa.tipo]}
-        </View>
-      );
-      this.setState({ mensagem })
-      return 0
     }
+    else{
+      // casa venceu por vantagem de elemento
+      this.tocarSomElemento(cartaCasa.tipo);
+      this.incrementarPontos('pontosCasa', cartaCasa.tipo);
+      mensagem = this.criarMensagemSimples(cartaUser.tipo, cartaCasa.tipo, setaEsquerda);
+      resultado = 0;
+    }
+
+    this.setState({ mensagem });
+    return resultado;
   }
 
   verificaVitoria(){
     if(this.state.pontosCasa.fogo >= 1 && this.state.pontosCasa.agua >= 1 && this.state.pontosCasa.neve >= 1){
-      this.somDerrota()
+      this.tocarSom(require('../assets/perdeu2.mp3'))
       this.setState({imagem: imagens[3], acabou: true})
     }
     else if(this.state.pontosCasa.fogo == 3){
-      this.somDerrota()
+      this.tocarSom(require('../assets/perdeu2.mp3'))
       this.setState({imagem: imagens[2], acabou: true})
     }
     else if(this.state.pontosCasa.agua == 3){
-      this.somDerrota()
+      this.tocarSom(require('../assets/perdeu2.mp3'))
       this.setState({imagem: imagens[0], acabou: true})
     }
     else if(this.state.pontosCasa.neve == 3){
-      this.somDerrota()
+      this.tocarSom(require('../assets/perdeu2.mp3'))
       this.setState({imagem: imagens[1], acabou: true})
     }
     else if(this.state.pontosUser.fogo == 3 || this.state.pontosUser.agua == 3 || this.state.pontosUser.neve == 3 || 
             (this.state.pontosUser.fogo >= 1 && this.state.pontosUser.agua >= 1 && this.state.pontosUser.neve >= 1)){
       this.setState({imagem: imagens[4], acabou: true})
-      this.somVitoria()
-      this.somVitoria2()
+      this.tocarSom(require('../assets/ganhou2.mp3'))
+      this.tocarSom(require('../assets/ganhou23.mp3'))
     }
   }
 
-  async somDerrota(){
-
+  // toca um som, parando o anterior se ainda estiver tocando
+  async tocarSom(arquivo, pararApos){
     if (this.soundAtual) {
       await this.soundAtual.stopAsync();
       await this.soundAtual.unloadAsync();
       this.soundAtual = null;
     }
 
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/perdeu2.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-  }
-
-  async somVitoria(){
-
-    if (this.soundAtual) {
-      await this.soundAtual.stopAsync();
-      await this.soundAtual.unloadAsync();
-      this.soundAtual = null;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/ganhou2.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-  }
-
-  async somVitoria2(){
-
-    if (this.soundAtual) {
-      await this.soundAtual.stopAsync();
-      await this.soundAtual.unloadAsync();
-      this.soundAtual = null;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/ganhou23.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-  }
-
-  async somAgua(){
-
-    if (this.soundAtual) {
-      await this.soundAtual.stopAsync();
-      await this.soundAtual.unloadAsync();
-      this.soundAtual = null;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/somAgua.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-  }
-
-  async somFogo(){
-
-    if (this.soundAtual) {
-      await this.soundAtual.stopAsync();
-      await this.soundAtual.unloadAsync();
-      this.soundAtual = null;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/somFogo.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-  }
-
-  async somNeve(){
-
-    if (this.soundAtual) {
-      await this.soundAtual.stopAsync();
-      await this.soundAtual.unloadAsync();
-      this.soundAtual = null;
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-        require('../assets/somNeve.mp3')
-      );
-      await sound.playAsync()
-      this.soundAtual = sound;
-
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          sound.unloadAsync();
-        this.soundAtual = null;
-        }
-      });
-      
-    setTimeout(async () => { // pra parar o audio dps de 3s (ele dura 8s)
-      try{
-        await sound.stopAsync()
-        await sound.unloadAsync()
-        this.soundAtual = null;
-      }
-      catch (e) {
-        console.log("audioNeve")
-      }
-    }, 3000);
+    const { sound } = await Audio.Sound.createAsync(arquivo);
+    await sound.playAsync()
+    this.soundAtual = sound;
 
     sound.setOnPlaybackStatusUpdate((status) => {
       if (status.didJustFinish) {
-        sound.unloadAsync()
-        this.soundAtual = null
+        sound.unloadAsync();
+        this.soundAtual = null;
       }
     });
+
+    if(pararApos){
+      setTimeout(async () => {
+        try{
+          await sound.stopAsync()
+          await sound.unloadAsync()
+          this.soundAtual = null;
+        }
+        catch (e) {
+          console.log("erro ao parar audio")
+        }
+      }, pararApos);
+    }
   }
 
+  tocarSomElemento(tipo){
+    if(tipo === 'agua'){
+      this.tocarSom(require('../assets/somAgua.mp3'));
+    }
+    else if(tipo === 'neve'){
+      this.tocarSom(require('../assets/somNeve.mp3'), 3000); // som dura 8s, corta em 3s
+    }
+    else{
+      this.tocarSom(require('../assets/somFogo.mp3'));
+    }
+  }
 
   jogarNovamente(){
     this.setState({
@@ -523,40 +339,21 @@
     })
   }
 
-  atualizarCartaUser(index){
-    const novoDeck = [...this.state.deckUser]
+  // troca a carta usada por uma nova, sem repetir nenhuma que já esteja no baralho
+  // chaveDeck é 'deckUser' ou 'deckCasa'
+  atualizarCarta(chaveDeck, index){
+    const novoDeck = [...this.state[chaveDeck]]
 
     let novaCarta = this.criarCarta()
     while (novoDeck.some(c => c.tipo === novaCarta.tipo && c.nivel === novaCarta.nivel)){
         novaCarta = this.criarCarta()
     }
     novoDeck[index] = novaCarta
-    this.setState({
-      deckUser: novoDeck
-    });
-  }
-
-  atualizarCartaCasa(index){
-    const novoDeckCasa = [...this.state.deckCasa];
-
-    let novaCarta = this.criarCarta();
-    while (novoDeckCasa.some(c => c.tipo === novaCarta.tipo && c.nivel === novaCarta.nivel)){
-        novaCarta = this.criarCarta();
-    }
-    novoDeckCasa[index] = novaCarta
-    this.setState({
-      deckCasa: novoDeckCasa
-    })
+    this.setState({ [chaveDeck]: novoDeck });
   }
 
   
   CartaPlacar=({ tipo })=>{
-    const cores = {
-      fogo: 'orange',
-      agua: '#00c2ff',
-      neve: '#85f8ff',
-    }
-
     const icones = {
       fogo: <Fontisto name="fire" size={16} color="orange"/>,
       agua: <Ionicons name="water-sharp" size={18} color="#00c2ff"/>,
@@ -569,7 +366,7 @@
         width: 25,
         borderRadius: 8,
         borderWidth: 2,
-        borderColor: cores[tipo],
+        borderColor: CORES_BORDA[tipo],
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
@@ -580,6 +377,14 @@
     )
   }
 
+  // cor da borda de uma carta: verde se selecionada,
+  // cor especial se for nivel maximo (8)
+  calcularCorCarta(tipo, nivel, selecionada){
+    if(selecionada) return 'green';
+    if(nivel === 8) return CORES_NIVEL_MAX[tipo];
+    return CORES_BORDA[tipo];
+  }
+
   carta({ tipo, nivel, imagem, onPress, index}){
     const icones={
       fogo: <Fontisto name="fire" size={16} color="orange" />,
@@ -587,35 +392,13 @@
       neve: <FontAwesome name="snowflake-o" size={16} color="white" />,
     };
 
-    const coresBorda={
-      fogo: 'yellow',
-      agua: '#183ccb',
-      neve: '#85f8ff',
-    };
-    const corFinal =
-        this.state.cartaIndex === 
-        index ? 'green' : // se for a selecionada fica verde
-        nivel === 8 && tipo === "fogo" ? '#6a2020' :
-        nivel === 8 && tipo === "agua" ? '#272972' :
-        nivel === 8 && tipo === "neve" ? '#358f8f' :
-        coresBorda[tipo];
-
-    const corStatsFinal =
-      this.state.cartaIndex ===
-      index? 'green' :
-      nivel === 8 && tipo === "fogo" ? '#6a2020' :
-      nivel === 8 && tipo === "agua" ? '#272972' :
-      nivel === 8 && tipo === "neve" ? '#358f8f' :
-      coresBorda[tipo];
-
+    const corCarta = this.calcularCorCarta(tipo, nivel, this.state.cartaIndex === index);
     const corPalavra = nivel === 8 ? 'white' : 'black';
-
-
 
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={1}>
-      <ImageBackground source={imagem} style={[estilos.carta, { borderColor: corFinal }]}>
-        <View style={[estilos.stats, { backgroundColor: corStatsFinal }]}>
+      <ImageBackground source={imagem} style={[estilos.carta, { borderColor: corCarta }]}>
+        <View style={[estilos.stats, { backgroundColor: corCarta }]}>
             <Text style={estilos.elemento}>{icones[tipo]}</Text>
             <Text style={[estilos.nivel,{color: corPalavra}]}>
               {nivel}
@@ -633,25 +416,11 @@
         agua: <Ionicons name="water-sharp" size={32} color="#00c2ff" />,
         neve: <FontAwesome name="snowflake-o" size={32} color="white" />,
       };
-      const coresBorda = {
-        fogo: 'yellow',
-        agua: '#183ccb',
-        neve: '#85f8ff',
-      };
-      const corFinal =
-        nivel === 8 && tipo === "fogo" ? '#6a2020' :
-        nivel === 8 && tipo === "agua" ? '#272972' :
-        nivel === 8 && tipo === "neve" ? '#358f8f' :
-        coresBorda[tipo];
-      const corStatsFinal =
-        nivel === 8 && tipo === "fogo" ? '#6a2020' :
-        nivel === 8 && tipo === "agua" ? '#272972' :
-        nivel === 8 && tipo === "neve" ? '#358f8f' :
-        coresBorda[tipo];
+      const corCarta = this.calcularCorCarta(tipo, nivel, false);
       const corPalavra = nivel === 8 ? 'white' : 'black';
       return (
-        <ImageBackground source={imagem} style={[estilos.cartaGrande, { borderColor: corFinal }]}>
-          <View style={[estilos.statsGrande, { backgroundColor: corStatsFinal }]}>
+        <ImageBackground source={imagem} style={[estilos.cartaGrande, { borderColor: corCarta }]}>
+          <View style={[estilos.statsGrande, { backgroundColor: corCarta }]}>
             <Text style={estilos.elementoGrande}>{icones[tipo]}</Text>
             <Text style={[estilos.nivelGrande, { color: corPalavra }]}>
               {nivel}
@@ -668,15 +437,17 @@
           <ImageBackground source={fundo} style={estilos.tudo}>
             {!this.state.acabou && (
               <View style={estilos.deckUserinteiro}>
-                {this.state.deckUser.map((c, index) => 
-                  this.carta({ 
-                    tipo: c.tipo, 
-                    nivel: c.nivel, 
-                    imagem: c.imagem,
-                    index, // pra saber qual carta foi selecionada e mudar a cor
-                    onPress: () => this.selecionarCarta(index)
-                  })
-                )}
+                {this.state.deckUser.map((c, index) => (
+                  <View key={c.tipo + c.nivel + index}>
+                    {this.carta({ 
+                      tipo: c.tipo, 
+                      nivel: c.nivel, 
+                      imagem: c.imagem,
+                      index, // pra saber qual carta foi selecionada e mudar a cor
+                      onPress: () => this.selecionarCarta(index)
+                    })}
+                  </View>
+                ))}
                 <TouchableOpacity style={estilos.botao} activeOpacity={0.8} onPress={() => this.jogar()}>
                 <FontAwesome style={[estilos.mao,this.state.cartaIndex !== null && { backgroundColor: "#3d8537" }]} 
                   name="hand-stop-o" size={58} color="black" />
@@ -691,9 +462,11 @@
                   {['fogo', 'agua', 'neve'].map(tipo => (
                     <View key={tipo} style={estilos.placarElementoColuna}>
                       <View style={estilos.slotElemento}>
-                        {Array(this.state.pontosUser[tipo]).fill().map((_, i) =>
-                          this.CartaPlacar({ tipo, key: i })
-                        )}
+                        {Array(this.state.pontosUser[tipo]).fill().map((_, i) => (
+                          <View key={tipo + i}>
+                            {this.CartaPlacar({ tipo })}
+                          </View>
+                        ))}
                       </View>
                     </View>
                   ))}
@@ -705,9 +478,11 @@
                   {['fogo', 'agua', 'neve'].map(tipo => (
                     <View key={tipo} style={estilos.placarElementoColuna}>
                       <View style={estilos.slotElemento}>
-                        {Array(this.state.pontosCasa[tipo]).fill().map((_, i) =>
-                          this.CartaPlacar({ tipo, key: i })
-                        )}
+                        {Array(this.state.pontosCasa[tipo]).fill().map((_, i) => (
+                          <View key={tipo + i}>
+                            {this.CartaPlacar({ tipo })}
+                          </View>
+                        ))}
                       </View>
                     </View>
                   ))}

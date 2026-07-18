@@ -90,6 +90,47 @@ export default class Jogo1play extends React.Component {
       return x
   }
 
+  avaliarExpressao(expressao){
+    const tokens = expressao.match(/\d+\.?\d*|\+|-|\*|\/|\(|\)/g) || []
+    let pos = 0
+
+    const parseFactor = () => {
+      if(tokens[pos] === '('){
+        pos++
+        const valor = parseExpr()
+        pos++ // fecha ')'
+        return valor
+      }
+      if(tokens[pos] === '-'){
+        pos++
+        return -parseFactor()
+      }
+      return parseFloat(tokens[pos++])
+    }
+
+    const parseTerm = () => {
+      let valor = parseFactor()
+      while(tokens[pos] === '*' || tokens[pos] === '/'){
+        const op = tokens[pos++]
+        const prox = parseFactor()
+        valor = op === '*' ? valor * prox : valor / prox
+      }
+      return valor
+    }
+
+    const parseExpr = () => {
+      let valor = parseTerm()
+      while(tokens[pos] === '+' || tokens[pos] === '-'){
+        const op = tokens[pos++]
+        const prox = parseTerm()
+        valor = op === '+' ? valor + prox : valor - prox
+      }
+      return valor
+    }
+
+    return parseExpr()
+  }
+
   expandir(resultado){
     let op = this.aleatorio(1,4)
 
@@ -137,470 +178,146 @@ export default class Jogo1play extends React.Component {
   }
 
   criar_expressao(){
-    let op = this.op_aleatoria()
-    let resultado, expressaotemp
+    // "alvo" é o operador que o jogador vai precisar adivinhar nesta rodada
+    const alvo = this.op_aleatoria()
+    this.setState({resposta: alvo})
     const icon = "■"
+
+    let op = alvo
+    let op2 = this.op_aleatoria()
+    let op3 = this.op_aleatoria()
+
     let n1 = this.aleatorio(1,100)
     let n2 = this.aleatorio(1,100)
     let n3 = this.aleatorio(1,100)
     let n4 = this.aleatorio(1,75)
-    let op2 = this.op_aleatoria()
-    let op3 = this.op_aleatoria()
+
     let rodada5e6 = this.aleatorio(1,2)
     let final = this.aleatorio(1,3)
-    if(op == " + "){
-      this.setState({resposta: op})
-      if(this.state.rodada < 2){
-        resultado = eval(`${n1}${op}${n2}`); 
-        expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-      }/////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 4){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
+    let resultado, expressaotemp
+    const rodada = this.state.rodada
+
+    if(rodada < 2){
+      resultado = this.avaliarExpressao(`${n1}${op}${n2}`)
+      expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
+    }
+    else if(rodada < 4){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      resultado = this.avaliarExpressao(`${n1}${op}${n2}${op2}${n3}`)
+      ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+      resultado = this.verifica_inteiro(resultado)
+      expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
+      expressaotemp = this.formatar(expressaotemp)
+    }
+    else if(rodada < 5){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      if(rodada5e6 == 1){
+        resultado = this.avaliarExpressao(`${n1}${op}(${n2}${op2}${n3})`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
         resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 5){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 6){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
+        expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
+      } else {
+        resultado = this.avaliarExpressao(`(${n1}${op}${n2})${op2}${n3}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
+      }
+      expressaotemp = this.formatar(expressaotemp)
+    }
+    else if(rodada < 6){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      if(rodada5e6 == 1){
+        resultado = this.avaliarExpressao(`${n1}${op}(${n2}${op2}${n3})`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
         resultado = this.verifica_inteiro(resultado)
         resultado = this.expandir(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 8){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}${op3}${n4}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
+        expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
+      } else {
+        resultado = this.avaliarExpressao(`(${n1}${op}${n2})${op2}${n3}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
         resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 9){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
+        resultado = this.expandir(resultado)
+        expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
       }
-      else if(this.state.rodada < 10){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," + ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
+      expressaotemp = this.formatar(expressaotemp)
+    }
+    else if(rodada < 8){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      resultado = this.avaliarExpressao(`${n1}${op}${n2}${op2}${n3}${op3}${n4}`)
+      ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+      resultado = this.verifica_inteiro(resultado)
+      expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
+      expressaotemp = this.formatar(expressaotemp)
+    }
+    else if(rodada < 9){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      if(final == 1){
+        resultado = this.avaliarExpressao(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
       }
+      if(final == 2){
+        resultado = this.avaliarExpressao(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
+      }
+      if(final == 3){
+        resultado = this.avaliarExpressao(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
+      }
+      expressaotemp = this.formatar(expressaotemp)
+    }
+    else if(rodada < 10){
+      [op,op2,op3] = this.troca_ordem(op,op2,op3)
+      if(final == 1){
+        resultado = this.avaliarExpressao(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        resultado = this.expandir(resultado)
+        expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
+      }
+      if(final == 2){
+        resultado = this.avaliarExpressao(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        resultado = this.expandir(resultado)
+        expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
+      }
+      if(final == 3){
+        resultado = this.avaliarExpressao(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`)
+        ;[op,op2,op3] = this.verifica_sinal(op,op2,op3,alvo)
+        resultado = this.verifica_inteiro(resultado)
+        resultado = this.expandir(resultado)
+        expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
+      }
+      expressaotemp = this.formatar(expressaotemp)
     }
 
-
-    if(op == " - "){
-      this.setState({resposta: op})
-      if(this.state.rodada < 2){
-        resultado = eval(`${n1}${op}${n2}`);
-        expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 4){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 5){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 6){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 8){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}${op3}${n4}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 9){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-      else if(this.state.rodada < 10){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," - ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-    }
-
-
-    if(op == " * "){
-      this.setState({resposta: op})
-      if(this.state.rodada < 2){
-        resultado = eval(`${n1}${op}${n2}`);
-        expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 4){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 5){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 6){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 8){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}${op3}${n4}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 9){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-      else if(this.state.rodada < 10){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," * ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-    }
-
-
-    if(op == " / "){
-      this.setState({resposta: op})  
-      if(this.state.rodada < 2){
-        resultado = eval(`${n1}${op}${n2}`);
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 4){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-       else if(this.state.rodada < 5){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 6){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(rodada5e6 == 1){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 + ") = " + resultado
-        }
-        else{
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-      else if(this.state.rodada < 8){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        resultado = eval(`${n1}${op}${n2}${op2}${n3}${op3}${n4}`);
-        [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-        resultado = this.verifica_inteiro(resultado)
-        expressaotemp = n1 + op + n2 + op2 + n3 + op3 + n4 + " = " + resultado
-        expressaotemp = this.formatar(expressaotemp)
-      }//////////////////////////////////////////////////////////////////////////////////////////////
-       else if(this.state.rodada < 9){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-      else if(this.state.rodada < 10){
-        [op,op2,op3] = this.troca_ordem(op,op2,op3)
-        if(final == 1){
-          resultado = eval(`(${n1}${op}${n2})${op2}${n3}${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = "(" + n1 + op + n2 + ")" + op2 + n3 + op3 + n4 + " = " + resultado
-        }
-        if(final == 2){
-          resultado = eval(`${n1}${op}${n2}${op2}(${n3}${op3}${n4})`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + n2 + op2 + "(" + n3 + op3 + n4 + ") = " + resultado
-        }
-        if(final == 3){
-          resultado = eval(`${n1}${op}(${n2}${op2}${n3})${op3}${n4}`);
-          [op,op2,op3] = this.verifica_sinal(op,op2,op3," / ")
-          resultado = this.verifica_inteiro(resultado)
-          resultado = this.expandir(resultado)
-          expressaotemp = n1 + op + "(" + n2 + op2 + n3 +")" + op3 + n4 + " = " + resultado
-        }
-        expressaotemp = this.formatar(expressaotemp)
-      }
-    }
     this.setState({expressao: expressaotemp})
   }
 
  //////////////////////////////////////////////
 
-  validar(){ // POR ALGUM MOTIVO A FUNCAO criar_expressao() DA ERRO NO CELULAR AS VEZES, ENTAO PRECISEI CRIAR UMA OUTRA FUNCAO COM EXCEPTION 
-    let ok = false;
+  validar(){
     if(this.state.espera){
       return
     }
     if(this.state.rodada == 0){
-      while (!ok){
-        try{
-          this.criar_expressao();
-          ok = true; 
-          this.setState({ rodada: this.state.rodada + 1 });
-        } 
-        catch(erro){
-          console.log("Erro na primeira rodada: ", erro);
-        }
-      }
+      this.criar_expressao();
+      this.setState({ rodada: this.state.rodada + 1 });
     }
 
     else if(this.state.rodada < 10){
-
       if(this.state.chute == ''){
         return
       }
-      while (!ok){
-        try{
-          this.pontuar()
-          this.criar_expressao();
-          this.setState({ rodada: this.state.rodada + 1, chute: '' });
-          ok = true
-        } 
-        catch(erro){
-          console.log("Erro expressao:", erro);
-        }
-      }
+      this.pontuar()
+      this.criar_expressao();
+      this.setState({ rodada: this.state.rodada + 1, chute: '' });
     }
 
     else if(this.state.rodada == 10 && !this.state.acabou){
@@ -633,11 +350,11 @@ export default class Jogo1play extends React.Component {
   ///////////////////////////////////////////////
   pontuar(){
     if(this.state.chute == this.state.resposta){
-      this.somCertaResposta()
+      this.tocarSom(require('../assets/respostacerta.mp3'), 0.2)
       this.setState({ acertos: this.state.acertos + 1,botaoCerto: this.state.chute,espera: true});
     }
     else{
-      this.somErradaResposta()
+      this.tocarSom(require('../assets/respostaerrada.mp3'), 0.2)
       this.setState({ erros: this.state.erros + 1, botaoCerto: this.state.resposta, botaoErrado: this.state.chute,espera:true});
     }
     setTimeout(() => {
@@ -668,89 +385,34 @@ export default class Jogo1play extends React.Component {
     });
   }
 
-   async somCertaResposta(){
-    const { sound } = await Audio.Sound.createAsync(
-      require('../assets/respostacerta.mp3')
-    );
-    await sound.setVolumeAsync(0.2);
-    await sound.playAsync()
-    this.soundAtual = sound;
-
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish) {
-        sound.unloadAsync()
-        this.soundAtual = null;
-      }
-    });
-
-  }
-
-  async somErradaResposta(){
-    const { sound } = await Audio.Sound.createAsync(
-      require('../assets/respostaerrada.mp3')
-    );
-    await sound.setVolumeAsync(0.2);
-    await sound.playAsync()
-    this.soundAtual = sound;
-
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish) {
-        sound.unloadAsync()
-        this.soundAtual = null;
-      }
-    });
-  }
-
-  async somDerrota(){
-
-  if (this.soundAtual) {
-    await this.soundAtual.stopAsync();
-    await this.soundAtual.unloadAsync();
-    this.soundAtual = null;
-  }
-
-    const { sound } = await Audio.Sound.createAsync(
-      require('../assets/perdeu.mp3')
-    );
-    await sound.playAsync()
-    this.soundAtual = sound;
-
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish) {
-        sound.unloadAsync();
-        this.soundAtual = null;
-      }
-    });
-  }
-
-  async somVitoria(){
-
-  if (this.soundAtual) {
-    await this.soundAtual.stopAsync();
-    await this.soundAtual.unloadAsync();
-    this.soundAtual = null;
-  }
-
-  const { sound } = await Audio.Sound.createAsync(
-      require('../assets/ganhou.mp3')
-    );
-    await sound.playAsync()
-    this.soundAtual = sound;
-
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish) {
-        sound.unloadAsync();
+  // toca um som, interrompendo/descarregando o som anterior se houver.
+  // substitui as 4 funcoes somCertaResposta/somErradaResposta/somDerrota/somVitoria.
+  async tocarSom(arquivo, volume = 1){
+    if (this.soundAtual) {
+      await this.soundAtual.stopAsync();
+      await this.soundAtual.unloadAsync();
       this.soundAtual = null;
+    }
+
+    const { sound } = await Audio.Sound.createAsync(arquivo);
+    await sound.setVolumeAsync(volume);
+    await sound.playAsync();
+    this.soundAtual = sound;
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.didJustFinish) {
+        sound.unloadAsync();
+        this.soundAtual = null;
       }
     });
   }
 
   componentDidUpdate(prevProps, prevState){
     if (!prevState.acabou && this.state.acabou && this.state.acertos < 6){
-      this.somDerrota()
+      this.tocarSom(require('../assets/perdeu.mp3'))
     }
     if (!prevState.acabou && this.state.acabou && this.state.acertos >= 6 ){
-      this.somVitoria()
+      this.tocarSom(require('../assets/ganhou.mp3'))
     }
   }
 
@@ -826,7 +488,7 @@ export default class Jogo1play extends React.Component {
               <Text style={estilos.textobotao2}>Confirmar</Text>
           </TouchableOpacity>
 
-           {this.state.acabou && ( // so aparece esse botao quando {acabou} for verdadeiro (quando o jogo acaba)
+           {this.state.acabou && (
             <TouchableOpacity 
               style={estilos.botao3} 
               onPress={() => this.resetar()} 
@@ -1011,4 +673,4 @@ const estilos = StyleSheet.create({
     marginRight: "auto",
     marginTop: -40,
   },
-})    
+})
