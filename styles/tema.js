@@ -5,6 +5,7 @@ export const cores = {
 
   azulEscuro: '#014a7d',  
   azulClaro: '#61d1ea',   
+  azulAccent: '#b3dde6',
   azulInput: '#eaf7fa',    
   bordaInput: '#c5d3d6',
 

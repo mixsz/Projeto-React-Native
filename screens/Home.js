@@ -1,127 +1,132 @@
 import React from 'react';
-import { Text,View,StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { cores, fontes, sombraPadrao } from '../styles/tema';
 
-export default class Home extends React.Component {  
-  constructor(props){
+export default class Home extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-       perfil: this.props.route.params.perfil            
+      perfil: this.props.route.params.perfil,
     };
   }
- 
+
   render() {
     return (
       <View style={estilos.tudo}>
         <View style={estilos.cima}>
-            <FontAwesome5 style={estilos.icone1} name="user-circle" size={70} color="#232424"/>
-            <Text style={estilos.titulo}> {this.state.perfil.usuario} </Text> 
+          <FontAwesome5 style={estilos.icone1} name="user-circle" size={70} color={cores.textoPreto} />
+          <Text style={estilos.titulo}> {this.state.perfil.usuario} </Text>
         </View>
-         <View style={estilos.botoes}>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo1nav')} activeOpacity={0.6}>
-              <View style ={estilos.nomeicon}>
-                  <MaterialCommunityIcons name="calculator-variant-outline" size={30} color="#d0f6fe" style={estilos.iconz} />
-                  <Text style={estilos.textobotao}> Operação Misteriosa </Text>
-              </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Jogo2nav')} activeOpacity={0.6}>
-              <View style ={estilos.nomeicon}>
-               <MaterialCommunityIcons name="cards" size={30} color="#d0f6fe" />
-                <Text style={estilos.textobotao1}> Card Duel </Text>
-              </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={estilos.botao} onPress={() =>this.props.navigation.navigate('Login')} activeOpacity={0.6}>
-              <View style ={estilos.nomeicon}>
-                <MaterialCommunityIcons name="exit-run" size={24}  color="#d93838" style={estilos.iconz2} />
-                <Text style={estilos.textobotao2}> Sair </Text>
-              </View>
-              </TouchableOpacity>
-         </View>
+        <View style={estilos.botoes}>
+          <TouchableOpacity
+            style={estilos.botao}
+            onPress={() => this.props.navigation.navigate('Jogo1nav')}
+            activeOpacity={0.6}
+          >
+            <View style={estilos.nomeicon}>
+              <MaterialCommunityIcons
+                name="calculator-variant-outline"
+                size={30}
+                color={cores.fundo}
+                style={estilos.iconz}
+              />
+              <Text style={estilos.textobotao}> Operação Misteriosa </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={estilos.botao}
+            onPress={() => this.props.navigation.navigate('Jogo2nav')}
+            activeOpacity={0.6}
+          >
+            <View style={estilos.nomeicon}>
+              <MaterialCommunityIcons name="cards" size={30} color={cores.fundo} />
+              <Text style={estilos.textobotao}> Card Duel </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={estilos.botao}
+            onPress={() => this.props.navigation.navigate('Login')}
+            activeOpacity={0.6}
+          >
+            <View style={estilos.nomeicon}>
+              <MaterialCommunityIcons name="exit-run" size={24} color={cores.erroForte} style={estilos.iconz2} />
+              <Text style={estilos.textobotaoSair}> Sair </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 }
 
-
 const estilos = StyleSheet.create({
-  tudo:{
+  tudo: {
     flex: 1,
-    backgroundColor: "#d0f6fe",
+    backgroundColor: cores.fundo,
   },
-  botoes:{
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+  botoes: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-    marginTop: 60
+    marginTop: 60,
   },
-  botao:{
+  botao: {
     borderRadius: 25,
-    width: "90%",
+    width: '90%',
     height: 80,
-    alignItems: "center",
-    justifyContent:"center",
-    backgroundColor: "#232424",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: cores.textoPreto,
     marginLeft: -1,
     marginBottom: 60,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5, 
-    elevation: 5, // isso so funciona pra android
+    shadowColor: '#000',
+    ...sombraPadrao,
   },
-  textobotao:{
+  textobotao: {
     fontSize: 20,
-    fontFamily: "sans-serif",
-    color: '#d0f6fe',
-    fontWeight: "bold"
+    fontFamily: fontes.padrao,
+    color: cores.fundo,
+    fontWeight: 'bold',
   },
-   textobotao1:{
+  textobotaoSair: {
     fontSize: 20,
-    fontFamily: "sans-serif",
-    color: '#d0f6fe',
-    fontWeight: "bold"
+    fontFamily: fontes.padrao,
+    color: cores.erroForte,
+    fontWeight: 'bold',
   },
-  textobotao2:{
-    fontSize: 20,
-    fontFamily: "sans-serif",
-    color: '#d93838',
-    fontWeight: "bold"
-  },
-  titulo:{
+  titulo: {
     fontSize: 25,
-    fontFamily: "sans-serif",
-    textAlign: "center",
-    color: "#232424",
-    fontWeight: "bolder"
+    fontFamily: fontes.padrao,
+    textAlign: 'center',
+    color: cores.textoPreto,
+    fontWeight: 'bolder',
   },
-  icone1:{
-    fontFamily: "sans-serif",
-    textAlign: "center",
-    fontWeight: "bolder",
-    marginBottom: 10
+  icone1: {
+    fontFamily: fontes.padrao,
+    textAlign: 'center',
+    fontWeight: 'bolder',
+    marginBottom: 10,
   },
-  cima:{
-    backgroundColor: "white",
+  cima: {
+    backgroundColor: cores.branco,
     height: 260,
     borderRadius: 60,
     marginTop: -50,
     paddingTop: 100,
-    flexDirection: "column",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5, 
-    elevation: 5
+    flexDirection: 'column',
+    ...sombraPadrao,
   },
-  nomeicon:{
-    flexDirection: "row",
-    alignItems: "center"
+  nomeicon: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  iconz:{
-    marginRight: 4
+  iconz: {
+    marginRight: 4,
   },
-  iconz2:{
-    marginRight: 2
-  }
-})
+  iconz2: {
+    marginRight: 2,
+  },
+});
