@@ -1,4 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Crypto from 'expo-crypto';
+
+async function hashSenha(senha) {
+  return await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, senha);
+}
 
 export async function buscarUsuario(nomeUsuario) {
   const dados = await AsyncStorage.getItem(nomeUsuario);
@@ -14,7 +19,8 @@ export async function criarUsuario(nomeUsuario, senha) {
     throw new Error('Este nome já está sendo utilizado!');
   }
 
-  const perfil = { usuario: nomeUsuario, senha };
+  const senhaHash = await hashSenha(senha);
+  const perfil = { usuario: nomeUsuario, senha: senhaHash };
   await AsyncStorage.setItem(nomeUsuario, JSON.stringify(perfil));
   return perfil;
 }
@@ -26,7 +32,8 @@ export async function autenticar(nomeUsuario, senha) {
   if (perfil === null) {
     return { sucesso: false, motivo: 'USUARIO_NAO_ENCONTRADO' };
   }
-  if (perfil.senha !== senha) {
+  const senhaHash = await hashSenha(senha);
+  if (perfil.senha !== senhaHash) {
     return { sucesso: false, motivo: 'SENHA_INCORRETA' };
   }
   return { sucesso: true, perfil };
