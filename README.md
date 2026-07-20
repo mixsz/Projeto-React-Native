@@ -39,6 +39,7 @@ npx expo start
 * **Expo** - para facilitar o processo de execução e build
 * **React Navigation** - responsável pela navegação entre telas
 * **AsyncStorage** - armazenamento local dos dados do usuário
+* **Expo Crypto** - geração de hash (SHA-256) da senha do usuário
 * **StyleSheet** - estilização de componentes
 
 ## Estrutura do Sistema
@@ -47,8 +48,10 @@ npx expo start
 Projeto-React-Native-main
 ├── 📂 assets/      # Contém imagens, ícones e áudios utilizados no app
 ├── 📂 navs/        # Responsável pela navegação entre as telas
+├── 📂 screens/     # Onde está localizado todos arquivos de telas do app (.js)
+├── 📂 services/    # Lógica de acesso a dados
+├── 📂 styles/      # Tema compartilhado (cores, sombras, estilos reutilizáveis)
 ├── 📂 screenshots/ # Contém as imagens do aplicativo (p/ readme)
-├── 📂 telas/       # Onde está localizado todos arquivos de telas do app (.js)
 ├── 📜 App.js       # Ponto de entrada principal do aplicativo
 ├── 📜 index.js     # Arquivo inicial que registra o App principal
 ├── 📜 app.json     # Configurações do aplicativo (nome, versão, ícone, etc.)
@@ -63,6 +66,8 @@ Projeto-React-Native-main
 Permite que o usuário crie uma conta informando **nome de usuário** e **senha**. Os dados são validados e se estiverem corretos, a conta é salva no banco de dados local, permitindo o login.
 
 Observação: Não é possível 2 usuários (ou mais) terem o mesmo nome.
+
+Segurança: A senha nunca é salva em texto puro, antes de ser armazenada, ela passa por um hash (SHA-256), e o login também compara hashes em vez da senha em si.
 
 ### 2. Login de Usuário
 O usuário, após criar sua conta, é capaz de acessar o app efetuando o login. São necessários o **username** e **senha**. Após digitar, o sistema valida os dados digitados, e se estiverem corretos, o usuário é autenticado e redirecionado para a home, permitindo acesso às funcionalidades privadas.
@@ -220,4 +225,3 @@ Este projeto foi inspirado em um outro trabalho que eu desenvolvi no segundo sem
   <img src="./screenshots/menu2.jpg" width="150" style="margin: 20px;"/>
   <img src="./screenshots/jogo2.jpg" width="150" style="margin: 20px;"/>
 </p>
-
