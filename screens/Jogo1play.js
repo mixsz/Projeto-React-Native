@@ -65,7 +65,7 @@ export default class Jogo1play extends React.Component {
   }
 
   verifica_sinal(op,op2,op3,sinal){
-    if(this.state.rodada > 7){
+    if(this.state.rodada >= 7){
       if(op == sinal) return [" ■ ",op2,op3]
       if(op2 == sinal) return [op," ■ ",op3]
       if(op3 == sinal) return [op,op2," ■ "]
@@ -132,6 +132,7 @@ export default class Jogo1play extends React.Component {
   }
 
   expandir(resultado){
+    resultado = Number(resultado) 
     let op = this.aleatorio(1,4)
 
     if(resultado == 0){ // pra n dar problema com denominador 0
@@ -199,6 +200,7 @@ export default class Jogo1play extends React.Component {
 
     if(rodada < 2){
       resultado = this.avaliarExpressao(`${n1}${op}${n2}`)
+      resultado = this.verifica_inteiro(resultado)
       expressaotemp = n1 + " " + icon + " " + n2 + " = " + resultado
     }
     else if(rodada < 4){
