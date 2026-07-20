@@ -15,6 +15,7 @@
   - [7. Card Duel](#7-card-duel)
 - [Motivação](#motivação)
 - [Algumas Telas](#algumas-telas)
+- [Gameplay](#gameplay)
 
 ## Objetivo do Projeto
 Inspirado em jogos mobiles, este app busca proporcionar uma experiência positiva através da criação de 2 jogos casuais e interativos em um único ambiente + um sistema de contas, permitindo cadastro e login de um usuário.
@@ -224,4 +225,18 @@ Este projeto foi inspirado em um outro trabalho que eu desenvolvi no segundo sem
 <p align="center">
   <img src="./screenshots/menu2.jpg" width="150" style="margin: 20px;"/>
   <img src="./screenshots/jogo2.jpg" width="150" style="margin: 20px;"/>
+</p>
+
+## Gameplay
+
+**Operação Misteriosa**
+
+<p align="center">
+  <img src="./screenshots/jogo1-demo.gif" width="250"/>
+</p>
+
+**Card Duel**
+
+<p align="center">
+  <img src="./screenshots/jogo2-demo.gif" width="250"/>
 </p>
