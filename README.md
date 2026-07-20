@@ -232,11 +232,11 @@ Este projeto foi inspirado em um outro trabalho que eu desenvolvi no segundo sem
 **Operação Misteriosa**
 
 <p align="center">
-  <img src="./screenshots/jogo1-demo.gif" width="250"/>
+  <img src="./screenshots/jogo1-demo.gif" width="280"/>
 </p>
 
 **Card Duel**
 
 <p align="center">
-  <img src="./screenshots/jogo2-demo.gif" width="250"/>
+  <img src="./screenshots/jogo2-demo.gif" width="280"/>
 </p>
